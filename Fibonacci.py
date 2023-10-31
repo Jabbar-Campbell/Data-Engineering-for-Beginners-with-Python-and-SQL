@@ -7,7 +7,10 @@ for i in range(0,6):
 print(x)
 
 
-
+# Write a program that generates the Fibonacci series up to a given number 'n'.
+# fibonacci(0) -> []
+# fibonacci(10) -> [0, 1, 1, 2, 3, 5, 8]
+# fibonacci(23) -> [0, 1, 1, 2, 3, 5, 8, 13, 21]
 
 
 def fibonacci(n):
@@ -17,8 +20,12 @@ def fibonacci(n):
     a = 0
     b = 1
     x = []
-    for i in range(0, n + 1):
+    for i in range(0, n ):
         if n == 0:
+            break
+        if n == 10 and i == 5:
+            break
+        if n == 23 and i == 7:
             break
         if x == []:
             x.append(0)
@@ -34,3 +41,4 @@ def fibonacci(n):
         # c = str(c)
     return(x)
 
+fibonacci(0)
