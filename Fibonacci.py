@@ -32,8 +32,9 @@ print(x)
 
 #### I dont understand where is my 3?
 a = 0
-b = a
-x = [ ]
+b = 1
+n = 5
+x = []
 def fibonacci(n):
     for i in range(0,n):
      c = a + b
