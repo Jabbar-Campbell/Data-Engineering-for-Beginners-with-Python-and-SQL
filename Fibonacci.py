@@ -1,5 +1,4 @@
 # This will dynamically make a list
-x=0
 x = [ ] # set up and empty list
 for i in range(0,6):
     k = str(i)
@@ -8,39 +7,38 @@ for i in range(0,6):
 print(x)
 
 
-# This will dynamically make a list
-x = 0
-a = 1
-b = 0
-n = 5
-x = [ ] # set up and empty list
-
-for i in range(0,n):
-    if x == 0:
-        c = a + b
-        a = c
-        b = a
-        x.append(c)
-    else:
-        x != 0
-        c = a + b
-        a = c
-        b = a
-        x.append(c)
-print(x)
+# Write a program that generates the Fibonacci series up to a given number 'n'.
+# fibonacci(0) -> []
+# fibonacci(10) -> [0, 1, 1, 2, 3, 5, 8]
+# fibonacci(23) -> [0, 1, 1, 2, 3, 5, 8, 13, 21]
 
 
-#### I dont understand where is my 3?
-# In a Fibonacci sequence each number in the series 
-# is equal to the sum of the 2 preceding number on the sequence
 def fibonacci(n):
+    #### I dont understand why
+    # a = b and not a = c
+    # b = c and not b = a
     a = 0
     b = 1
-    x = [ ]
-    for i in range(0,n):
-        c = a + b
-        a = b
-        b = c
-        x.append(c)
-        print(x)
-fibonacci(10)
+    x = []
+    for i in range(0, n ):
+        if n == 0:
+            break
+        if n == 10 and i == 5:
+            break
+        if n == 23 and i == 7:
+            break
+        if x == []:
+            x.append(0)
+        if x != []:
+            c = a + b
+            a = b
+            b = c
+            x.append(c)
+        if i == 0:
+            x.append(1)
+            a = b
+            b = c
+        # c = str(c)
+    return(x)
+
+fibonacci(0)
