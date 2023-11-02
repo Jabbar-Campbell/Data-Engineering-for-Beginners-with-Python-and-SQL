@@ -1,3 +1,6 @@
+#https://www.w3schools.com/python/default.asp
+# Great source for refreshers
+
 # This will dynamically make a list
 x = [ ] # set up and empty list
 for i in range(0,6):
@@ -42,3 +45,102 @@ def fibonacci(n):
     return(x)
 
 fibonacci(0)
+
+
+#Create a function called find_fibonacci that takes a
+# non-negative integer n as input and returns the n-th
+# Fibonacci number. The Fibonacci sequence is a series of
+# numbers where each number is the sum of the two preceding
+# ones, usually starting with 0 and 1.
+# Your function should use only built-in Python tools.
+
+#>>> find_fibonacci(0)
+#0
+#>>> find_fibonacci(1)
+#1
+#>>> find_fibonacci(5)
+#5
+#>>> find_fibonacci(10)
+#55
+
+
+def find_fibonacci(n):
+    a = 0
+    b = 1
+    x = []
+    #n = 5
+    for i in range(0,n):
+        if x == [ ]:
+            x.append(0)
+        if x != []:
+            c = a + b
+            a, b = b, b + a
+            x.append(c)
+            #print(x)
+    if n == 0:
+        return(0)
+    if n == 1:
+        return 1
+    else:
+        return(x[n-1])
+
+find_fibonacci(10)
+
+
+
+# Create a function called is_prime that takes an integer as
+# input and returns True if the number is prime and False
+# otherwise. Your function should use only built-in Python tools.
+
+#>>> is_prime(5)
+#True
+#>>> is_prime(17)
+#True
+#>>> is_prime(4)
+#False
+#>>> is_prime(1)
+#False
+
+
+
+def is_prime(number):
+    x = []
+    for i in range(1,number+1):
+        if number % i == 0:
+            x.append(i)
+    #if len(x) <= 1:
+    #    return("False")
+    if len(x) == 2:
+        return(True)
+    else:
+        return(False)
+
+
+
+
+
+# Description: Write a function that takes an integer n as input
+# and returns the count of prime numbers less than n. Input: 10 Output:
+# 4 (Primes less than 10: 2, 3, 5, 7)
+
+
+def count_primes(n):
+    x = []
+    for i in range(1,n+1):
+        if n==2:
+            return(0)
+        else:
+            if is_prime(i) == True:
+                x.append(i)
+                print(x)
+    return(len(x))
+
+count_primes(2)
+
+
+# Write a Python program that calculates the average of a list of numbers.
+#In:  [5, 10, 15, 20]
+
+#Out:  12.5
+# If the list is empty, return 0
+
