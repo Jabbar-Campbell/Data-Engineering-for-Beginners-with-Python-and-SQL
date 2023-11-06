@@ -140,7 +140,73 @@ count_primes(2)
 
 # Write a Python program that calculates the average of a list of numbers.
 #In:  [5, 10, 15, 20]
-
 #Out:  12.5
 # If the list is empty, return 0
 
+
+def calculate_average(numbers):
+    if numbers == 0:
+        return 0
+    else:
+        average = sum(numbers)/len(numbers)
+    return average
+
+
+# Write a Python function that takes a list of numbers and a target number,
+# and it returns the count of how many times the target number appears in the list.
+# In: ([1, 2, 3, 4, 2, 2, 5], 2)
+# Out: 3
+
+
+def count_occurences(numbers,target):
+    match = []
+    for i in range(len(numbers)):
+        if target == numbers[i]:
+            match.append(numbers[i])
+    return len(match)
+
+
+count_occurences([1,2,3,4,2,2,6],2)
+
+#Create a function called find_missing_number that takes a list of distinct integers
+# from 0 to n (inclusive), where n is one less than the length of the list, and returns the
+# missing number from the list. Your function should use only built-in Python tools.
+
+#>>> find_missing_number([0, 1, 3])
+#2
+#>>> find_missing_number([4, 1, 3, 2, 0, 6, 7, 5])
+#8
+#>>> find_missing_number([9, 7, 2, 1, 0, 6, 8, 4, 5, 3])
+#10
+#>>> find_missing_number([])
+#0
+nums = [4, 3, 2, 0, 6, 7, 5,1,1,1,1]
+
+def find_missing_number(nums):
+    x = []
+    nums =  sorted(nums)
+    if nums == []:
+        return(0)
+
+    for i in range(0,len(nums)+1) :
+        if nums.count(i) == 0:
+            x.append(i)
+            print(i)
+            #print(x)
+    #return(x)
+
+
+
+# Create a function called find_common_elements that takes two lists of integers as
+# input and returns a list containing the common elements between the two input lists.
+# The order of elements in the resulting list does not matter. Your function should use
+# only built-in Python tools.
+
+ find_common_elements([1, 2, 3, 4, 5], [3, 4, 5, 6, 7])
+[3, 4, 5]
+>>> find_common_elements([10, 20, 30], [30, 40, 50])
+[30]
+>>> find_common_elements([1, 2, 3], [4, 5, 6])
+[]
+>>> find_common_elements([], [1, 2, 3])
+[]
