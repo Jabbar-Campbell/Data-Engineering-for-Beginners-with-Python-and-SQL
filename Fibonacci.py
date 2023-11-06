@@ -202,11 +202,22 @@ def find_missing_number(nums):
 # The order of elements in the resulting list does not matter. Your function should use
 # only built-in Python tools.
 
- find_common_elements([1, 2, 3, 4, 5], [3, 4, 5, 6, 7])
-[3, 4, 5]
->>> find_common_elements([10, 20, 30], [30, 40, 50])
-[30]
->>> find_common_elements([1, 2, 3], [4, 5, 6])
-[]
->>> find_common_elements([], [1, 2, 3])
-[]
+
+#find_common_elements([1, 2, 3, 4, 5], [3, 4, 5, 6, 7])
+#[3, 4, 5]
+#>>> find_common_elements([10, 20, 30], [30, 40, 50])
+#[30]
+#>>> find_common_elements([1, 2, 3], [4, 5, 6])
+#[]
+#>>> find_common_elements([], [1, 2, 3])
+#[]
+
+
+def find_common_elements ( list_1 , list_2):
+    if list_1 == []:
+        return([])
+    else:
+    #set(list_1) | set(list_2)
+        return( set(list_1) & set(list_2) )
+
+find_common_elements([10, 20, 30], [30, 40, 50])
