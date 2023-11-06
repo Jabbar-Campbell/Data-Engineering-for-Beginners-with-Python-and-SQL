@@ -221,3 +221,27 @@ def find_common_elements ( list_1 , list_2):
         return( set(list_1) & set(list_2) )
 
 find_common_elements([10, 20, 30], [30, 40, 50])
+
+# Create a function called remove_duplicates that takes a list of
+# elements as input and returns a new list with duplicates
+# removed. Your function should use only built-in Python tools
+# and should maintain the original order of elements while
+# removing duplicates.
+
+#>>> remove_duplicates([1, 2, 2, 3, 4, 4, 5])
+#[1, 2, 3, 4, 5]
+#>>> remove_duplicates(['apple', 'banana', 'apple', 'cherry'])
+#['apple', 'banana', 'cherry']
+#>>> remove_duplicates([1, 2, 3])
+#[1, 2, 3]
+#>>> remove_duplicates([])
+#[]
+
+
+
+def remove_duplicates(input_list):
+    unique_list = []
+    for item in input_list:
+        if item not in unique_list:
+            unique_list.append(item)
+    return unique_liste_duplicates([1, 2, 2, 3, 4, 4, 5])
