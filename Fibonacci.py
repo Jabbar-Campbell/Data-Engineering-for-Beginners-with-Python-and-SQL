@@ -245,3 +245,73 @@ def remove_duplicates(input_list):
         if item not in unique_list:
             unique_list.append(item)
     return unique_liste_duplicates([1, 2, 2, 3, 4, 4, 5])
+
+# Create a function called count_word_occurrences that takes a
+# string and a target word as input and returns the number of times the target word appears in the string. The function should not be case-sensitive, meaning it should count occurrences regardless of the word's case.
+# Your function should use only built-in Python tools.
+
+
+
+#>>> count_word_occurrences("The quick brown fox jumps over the lazy dog.", "the")
+#2  # "the" appears twice (both in lowercase and uppercase).
+#>>> count_word_occurrences("This is a test sentence. This sentence is a test.", "sentence")
+#2  # "sentence" appears twice.
+#>>> count_word_occurrences("Python is a versatile programming language.", "Python")
+#1  # "Python" appears once (case-insensitive).
+#>>> count_word_occurrences("No matches here.", "word")
+#0  # "word" does not appear in the text.
+
+def count_word_occurrences(text, word):
+    text = text.lower()  # Convert the text to lowercase for case-insensitive matching
+    word = word.lower()  # Convert the target word to lowercase
+    return text.count(word) if text else 0
+
+count_word_occurrences("The quick brown fox jumps over the lazy dog.", "the")
+
+
+#Create a function called is_balanced_parentheses that takes a string containing only parentheses,
+# brackets, and curly braces as input and returns True if the parentheses are balanced and False
+# otherwise. The parentheses are considered balanced if they are closed in the correct order.
+# Your function should use only built-in Python tools.
+
+>>> is_balanced_parentheses("()")
+True
+>>> is_balanced_parentheses("()[]{}")
+True
+>>> is_balanced_parentheses("(]")
+False
+>>> is_balanced_parentheses("([)]")
+False
+>>> is_balanced_parentheses("{[]}")
+True
+
+def is_balanced_parenthesis(s):
+    my_list = list("()[]{}")
+    list_2 =  list(s)
+    paren = []
+    for i in range(len(my_list)):
+        #print(my_list[i])
+        if my_list[i] in  list_2:
+            #print(my_list[i])
+            paren.append("True")
+            #print(paren)
+        else:
+            #print(my_list[i])
+            paren.append("False")
+
+
+    if paren[:2] ==  ['True', 'True']:
+        return(True)
+
+    elif paren[2:4] == ['True', 'True']:
+        return (True)
+
+    elif paren[5:6] == ['True', 'True']:
+        return(True)
+    else:
+        return(False)
+
+
+
+
+
