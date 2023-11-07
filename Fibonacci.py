@@ -285,7 +285,7 @@ False
 >>> is_balanced_parentheses("{[]}")
 True
 
-def is_balanced_parenthesis(s):
+def is_balanced_parentheses(s):
     my_list = list("()[]{}")
     list_2 =  list(s)
     paren = []
@@ -308,10 +308,13 @@ def is_balanced_parenthesis(s):
 
     elif paren[5:6] == ['True', 'True']:
         return(True)
+
     else:
         return(False)
 
 
 
 
-
+### I Think we need to learn how to work
+# with a stack to get around this case###
+is_balanced_parentheses("([)]")
