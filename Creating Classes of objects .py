@@ -39,3 +39,81 @@ class Car2(Car):
 
 mel_car = Car2("Tesla","Y", 20015, "electric")
 mel_car.display_info()
+
+
+class MaxNumberFinder:
+
+    def __init__(self, nums):
+        self.nums = nums
+
+        # your code here
+
+    def find_max_number(self):
+        if self.nums == []
+            return(None)
+        else:
+            return (max(self.nums))
+
+
+finder = MaxNumberFinder(nums=[1,3,4,2])
+finder.find_max_number()
+
+
+# Create a class called Stack that implements a stack data structure.
+# The stack should support the following operations:
+# push(item): Pushes an item onto the top of the stack
+# pop(): Removes and returns the item at the top of the stack.
+# peek(): Returns the item at the top of the stack without removing it.
+# is_empty(): Returns True if the stack is empty and False otherwise.
+# size(): Returns the number of items in the stack.
+# NOTICE HOW WE CAN REFER TO OTHER FUNCTIONS INSIDE THE CLASS
+# SUCH AS is.empty2
+ 
+
+class Stack:
+    def __init__(self):
+        self.item = []
+
+    def push(self, item2):
+        return( self.item .insert( len(self.item), item2))
+
+    def pop(self):
+        return(self.item.pop(self.item[1]))
+
+
+    def peek(self):
+        return (self.item[len(self.item) -1])
+
+    def is_empty(self):
+        if self.item == []:
+            return(True)
+        else:
+            return(False)
+
+    def size(self):
+        if self.item == []:
+            return(0)
+        else:
+            return(len(self.item)-1)
+
+    def is_empty2(self):
+        if self.is_empty() == True:
+            print( "Spelled T-R-U-E")
+
+stack = Stack()
+
+
+stack.size()
+
+stack.push(1)
+stack.push(2)
+stack.push(3)
+
+
+
+
+
+print(stack.pop())  # Should print 3
+print(stack.peek())  # Should print 2
+print(stack.is_empty())  # Should print False
+print(stack.size())  # Should print 2
