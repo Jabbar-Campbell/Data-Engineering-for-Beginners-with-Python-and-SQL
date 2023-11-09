@@ -49,7 +49,7 @@ class MaxNumberFinder:
         # your code here
 
     def find_max_number(self):
-        if self.nums == []
+        if self.nums == []:
             return(None)
         else:
             return (max(self.nums))
@@ -68,7 +68,7 @@ finder.find_max_number()
 # size(): Returns the number of items in the stack.
 # NOTICE HOW WE CAN REFER TO OTHER FUNCTIONS INSIDE THE CLASS
 # SUCH AS is.empty2
- 
+
 
 class Stack:
     def __init__(self):
@@ -76,6 +76,7 @@ class Stack:
 
     def push(self, item2):
         return( self.item .insert( len(self.item), item2))
+
 
     def pop(self):
         return(self.item.pop(self.item[1]))
@@ -102,18 +103,111 @@ class Stack:
 
 stack = Stack()
 
-
-stack.size()
-
 stack.push(1)
 stack.push(2)
 stack.push(3)
-
-
-
-
 
 print(stack.pop())  # Should print 3
 print(stack.peek())  # Should print 2
 print(stack.is_empty())  # Should print False
 print(stack.size())  # Should print 2
+
+
+# Create a class called Queue that implements a queue data structure.
+# The queue should support the following operations:
+# enqueue(item): Adds an item to the back of the queue.
+# dequeue(): Removes and returns the item from the front of the queue.
+# peek(): Returns the item at the front of the queue without removing it.
+# is_empty(): Returns True if the queue is empty and False otherwise.
+# size(): Returns the number of items in the queue.
+
+class Queue:
+    def __init__(self):
+        # Initialize an empty queue
+        self.item = []
+
+    def enqueue(self, item2):
+        # Add the item to the back of the queue
+        if self.item == []:
+            return (self.item.append(item2))
+        else:
+            return (self.item.insert(len(self.item), item2))
+
+
+
+
+    def dequeue(self):
+        # Remove and return the item from the front of the queue
+        if self.item == []:
+            return None
+        else:
+            return self.item.pop(0)
+
+
+    def peek(self):
+        # Return the item at the front of the queue without removing it
+        if self.item == []:
+            return None
+        return self.item[0]
+
+
+
+    def is_empty(self):
+        # Return True if the queue is empty, False otherwise
+        if self.item == []:
+            return True
+        else:
+            return False
+
+
+    def size(self):
+        # Return the number of items in the queue
+        return len(self.item)
+
+
+
+my_queue = Queue()
+my_queue.enqueue(6)
+my_queue.enqueue(3)
+my_queue.peek()
+my_queue.is_empty()
+
+my_queue.size()
+
+my_list = [1,2,3,4,5,6]
+
+my_list.pop(0)
+
+
+# Write a function that finds the first closest number in a list
+# In: ([2, 4, 8, 10], 6)
+# Out: 4
+
+def find_closest_number(numbers, target):
+    x = []
+    stack = []
+    if numbers == []:
+            #x.append(target)
+            return None
+    if len(numbers) == 1:
+        return abs(numbers[0] - target)
+    else:
+        for i in range(0,len(numbers)):
+            x.append(abs(numbers[i] - target))
+    return x.pop(min(x))
+
+
+
+
+
+
+
+    #return ( (x)[0] )
+
+find_closest_number(numbers=[2,4,8,10],target=6)
+
+x = [ 4, 2, 2, 4]
+x[0] < x[1]
+abs(numbers[0]-6)
+
+sorted(numbers)[1]
