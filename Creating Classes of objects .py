@@ -196,18 +196,39 @@ def find_closest_number(numbers, target):
             x.append(abs(numbers[i] - target))
     return x.pop(min(x))
 
+# Create a function called longest_consecutive_subsequence
+# that takes a list of integers as input and returns the
+# length of the longest consecutive subsequence of integers
+# in the list. A consecutive subsequence is a sequence of integers
+# where each integer appears exactly once and they are in consecutive order.
+# Your function should use only built-in Python tools
+x = []
+def longest_consecutive_subsequence(nums):
+    x = []
+    #nums = sorted(nums)
+    if nums == []:
+        print("The list is empty")
+    if len(nums) >= 1:
+        i = 0
+        #end = len(nums)
+        while i < len(nums)-1:
+            if nums[i] == nums[i+1]:
+                x.append(nums[i])
+                print(x)
+                i += 1
+            else:
+                i += 1
+                print(x)
+
+                #if i > 0 and i == len(nums):
+                    #break
+
+    return(x)
+
+longest_consecutive_subsequence([10,25,1,2,3,5,6])
+longest_consecutive_subsequence([])
+### My While loop isn't printing or appending
+## and I don't know why ??????????????????
 
 
 
-
-
-
-    #return ( (x)[0] )
-
-find_closest_number(numbers=[2,4,8,10],target=6)
-
-x = [ 4, 2, 2, 4]
-x[0] < x[1]
-abs(numbers[0]-6)
-
-sorted(numbers)[1]
