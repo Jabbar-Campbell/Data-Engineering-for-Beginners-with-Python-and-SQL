@@ -216,12 +216,11 @@ def longest_consecutive_subsequence(nums):
                 x.append(nums[i])
                 print(x)
                 i += 1
+            #if i > 0 and i == len(nums):
+             #   break
             else:
                 i += 1
                 print(x)
-
-                #if i > 0 and i == len(nums):
-                    #break
 
     return(x)
 
