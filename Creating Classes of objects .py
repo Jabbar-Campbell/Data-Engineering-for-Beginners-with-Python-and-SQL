@@ -202,32 +202,46 @@ def find_closest_number(numbers, target):
 # in the list. A consecutive subsequence is a sequence of integers
 # where each integer appears exactly once and they are in consecutive order.
 # Your function should use only built-in Python tools
-x = []
-def longest_consecutive_subsequence(nums):
-    x = []
-    #nums = sorted(nums)
-    if nums == []:
-        print("The list is empty")
-    if len(nums) >= 1:
-        i = 0
-        #end = len(nums)
-        while i < len(nums)-1:
-            if nums[i] == nums[i+1]:
-                x.append(nums[i])
-                print(x)
-                i += 1
-            #if i > 0 and i == len(nums):
-             #   break
-            else:
-                i += 1
-                print(x)
 
-    return(x)
+def longest_consecutive_subsequence(nums):
+    num_set = set(nums)
+    max_length = 0
+ 
+    for num in num_set:
+        if num - 1 not in num_set:
+            current_num = num
+            current_length = 1
+ 
+            while current_num + 1 in num_set:
+                current_num += 1
+                current_length += 1
+ 
+            max_length = max(max_length, current_length)
+ 
+    return max_length
 
 longest_consecutive_subsequence([10,25,1,2,3,5,6])
 longest_consecutive_subsequence([])
-### My While loop isn't printing or appending
-## and I don't know why ??????????????????
+
+# Create a function called merge_sorted_lists that takes two sorted lists of 
+# integers as input and returns a single sorted list containing all the elements 
+# from both input lists. Your function should use only built-in Python tools.
 
 
-
+def merge_sorted_lists(list1, list2):
+    merged_list = []
+ 
+    i, j = 0, 0
+    while i < len(list1) and j < len(list2):
+        if list1[i] < list2[j]:
+            merged_list.append(list1[i])
+            i += 1
+        else:
+            merged_list.append(list2[j])
+            j += 1
+ 
+    # Append any remaining elements from both lists (if any)
+    merged_list.extend(list1[i:])
+    merged_list.extend(list2[j:])
+ 
+    return merged_list
