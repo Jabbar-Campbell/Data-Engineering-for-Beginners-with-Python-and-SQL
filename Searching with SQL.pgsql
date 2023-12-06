@@ -61,42 +61,40 @@ AVG(sales_amount) AS "Average Sales Amount" --we calculate and rename
 FROM sales
 GROUP BY product_category
 ORDER BY "Total Sales Amount" DESC
------------------------------------------------------------------------------------
+
 
 
 --                                     SUBQUERIES AND JOINING
-------------------------------------------------------------------------------------
 -- THE WITH STATMENT aka Common Table Expression (cte) allows us to chain queries
 -- it like creating a primary Data table thats been manipulated
 -- that you can then select from to make things less confusing 
 -- at allows us to chain selects 
-
--WITH cte_name AS ( SELECT column_1, column_2,
-                     AVG() AS
-                     SUM() AS
+------------------------------------------------------------------------------------
+-WITH 
+cte_name AS ( 
+    SELECT column_1, column_2,
+                     AVG(...) AS...
+                     SUM(...) AS...
                      FROM my_table
-                     GROUP BY
-                     ORDER BY)
+                     GROUP BY ...
+                     ORDER BY ...
+),
 
---Main query that references the CTE
-SELECT 
-FROM cte_name -- references the former WITH  !!!!
-WHERE ...;
-------------------------------------------------------------------------------- 
-   WITH RecursiveManagerCTE AS (
-  SELECT employee_id, first_name, last_name, manager_id, salary
-  FROM employees
-  WHERE manager_id IS NULL -- Find top-level managers
-  UNION ALL
-  SELECT e.employee_id, e.first_name, e.last_name, e.manager_id, e.salary
-  FROM employees e
-  JOIN RecursiveManagerCTE r ON e.manager_id = r.employee_id
+
+cte2_name AS (
+    SELECT column_1, column_2,
+                     AVG(...) AS...
+                     SUM(...) AS...
+                     FROM my_table
+                     GROUP BY ...
+                     ORDER BY ...
 )
- 
-SELECT manager_id, SUM(salary) AS total_salary_cost
-FROM RecursiveManagerCTE -- references the former WITH  !!!!
-GROUP BY manager_id;
-----------------------------------------------------------------------------
+
+--Main query that references columns from both CTE's
+SELECT cte.column_name....,cte_2.column_name...
+FROM cte_name cte_1 -- set an alias for first query   
+JOIN cte2_name cte2; -- set an alias for second query
+------------------------------------------------------------------------------- 
 
 
 
