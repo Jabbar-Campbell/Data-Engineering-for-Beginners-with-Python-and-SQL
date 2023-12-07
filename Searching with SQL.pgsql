@@ -158,7 +158,8 @@ JOIN LowestSalaries l ON e.Department = d.Department; --sql allows alias or shor
 --Sort the results in descending order based on inventory level.
 --Limit the results to display the top 5 products with the highest 
 -- inventory levels and the bottom 5 products with the lowest inventory levels.
-WITH
+-----------------------------------------------------------------------------------
+WITH --allows us to make multiple querys we can reference later
 t1 AS( 
 SELECT product_name AS "Product",
 inventory_level AS "Inventory Level"
@@ -179,4 +180,48 @@ LIMIT 5
 SELECT * FROM t1
 UNION ALL --now that we created 2 querys we can combine them row wise
 SELECT * FROM t2
+--------------------------------------------------------------------------------
 
+
+--Write a SQL SELECT query that retrieves the following information:
+--Customer's full name (concatenate first_name and last_name with a space in between)
+--Total purchase amount for each customer
+--Group the results by the customer's full name.
+--Sort the results in descending order based on the total purchase amount.
+--Limit the results to display the top 5 customers.
+--------------------------------------------------------------------------------
+  SELECT
+        --purchase_amount,
+        first_name || ' ' || last_name AS "Customer Name",
+        SUM(purchase_amount) AS "Total Purchase Amount"
+    FROM
+        customer_purchases
+    GROUP BY "Customer Name"
+    ORDER BY "Total Purchase Amount" DESC
+    LIMIT 5
+--------------------------------------------------------------------------------
+
+
+
+
+--Write a SQL SELECT query that retrieves the following information:
+
+--Product name
+
+--Number of times each product has been ordered (count)
+
+--Group the results by product name.
+
+--Sort the results in descending order based on the number of times each product has been ordered.
+
+--Limit the results to display the top 10 products.
+
+ SELECT
+        product_name AS "Product Name",
+        --order_id,
+        Count(order_id) AS "Order Count"
+FROM
+ orders
+GROUP BY "Product Name"
+ORDER BY "Order Count" DESC
+LIMIT 10
