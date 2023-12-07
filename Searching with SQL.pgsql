@@ -64,12 +64,22 @@ ORDER BY "Total Sales Amount" DESC
 
 
 
---                                     SUBQUERIES AND JOINING
--- THE WITH STATMENT aka Common Table Expression (cte) allows us to chain queries
--- it like creating a primary Data table thats been manipulated
--- that you can then select from to make things less confusing 
--- at allows us to chain selects 
-------------------------------------------------------------------------------------
+                                                  --SUBQUERIES AND JOINING--
+                            --THE WITH STATMENT aka Common Table Expression (cte) allows us to chain queries--
+                                --its like creating a primary Data table thats been manipulated that--
+                                    --you can then select from to make things less confusing --
+
+
+                                    
+
+                                                        --UNION--
+                            --UNIONS are similar to join except instead of joining on a single column --
+                                --UNION allow you to combine all columns from both Data tables --
+                                                -- in a rowise fashion--
+
+
+
+--------------------------EXAMPLE--------------------
 -WITH 
 cte_name AS ( 
     SELECT column_1, column_2,
@@ -94,7 +104,9 @@ cte2_name AS (
 SELECT cte.column_name....,cte_2.column_name...
 FROM cte_name cte_1 -- set an alias for first query   
 JOIN cte2_name cte2; -- set an alias for second query
-------------------------------------------------------------------------------- 
+-----------------------------------------------------------------------
+
+
 
 
 
@@ -107,7 +119,7 @@ JOIN cte2_name cte2; -- set an alias for second query
 --The lowest salary in each department
 --Group the results by department name.
 --Sort the results in ascending order based on the department name.
---------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 WITH --allows us to chain querys and name them
 HighestSalaries AS (
     SELECT
@@ -137,3 +149,34 @@ SELECT h.Highest Earner h.Higest Salary l.Lowest Earner l.Lowest Salary
 FROM HighestSalaries h --sql allows alias or short hand 
 JOIN LowestSalaries l ON e.Department = d.Department; --sql allows alias or short hand so we distingish above
 -----------------------------------------------------------------------------------------
+
+
+
+--Write a SQL SELECT query that retrieves the following information:
+--Product name
+--Inventory level for each product
+--Sort the results in descending order based on inventory level.
+--Limit the results to display the top 5 products with the highest 
+-- inventory levels and the bottom 5 products with the lowest inventory levels.
+WITH
+t1 AS( 
+SELECT product_name AS "Product",
+inventory_level AS "Inventory Level"
+FROM products
+ORDER BY inventory_level DESC
+LIMIT 5
+),
+
+t2 AS (
+SELECT product_name AS "Product",
+inventory_level AS "Inventory Level"
+FROM products
+ORDER BY inventory_level ASC
+LIMIT 5
+)
+
+
+SELECT * FROM t1
+UNION ALL --now that we created 2 querys we can combine them row wise
+SELECT * FROM t2
+
