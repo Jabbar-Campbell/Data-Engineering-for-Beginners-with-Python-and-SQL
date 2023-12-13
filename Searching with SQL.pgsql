@@ -205,16 +205,12 @@ SELECT * FROM t2
 
 
 --Write a SQL SELECT query that retrieves the following information:
-
 --Product name
-
 --Number of times each product has been ordered (count)
-
 --Group the results by product name.
-
 --Sort the results in descending order based on the number of times each product has been ordered.
-
 --Limit the results to display the top 10 products.
+--------------------------------------------------------------------------------
 
  SELECT
         product_name AS "Product Name",
@@ -225,3 +221,58 @@ FROM
 GROUP BY "Product Name"
 ORDER BY "Order Count" DESC
 LIMIT 10
+--------------------------------------------------------------------------------
+
+
+Instructions:
+
+--Write a SQL SELECT query that retrieves the following information:
+--Subject name
+--Average grade for each subject
+--Group the results by subject name.
+--Sort the results in descending order based on the average grade.
+--------------------------------------------------------------------------------
+ SELECT
+        subject_name AS "Subject Name",
+        --order_id,
+        Avg(grade) AS "Average Grade"
+FROM
+ orders
+GROUP BY "Subject Name"
+ORDER BY "Average Grade" DESC
+LIMIT 5
+--------------------------------------------------------------------------------
+
+
+--Write a SQL SELECT query that retrieves the following information:
+--Product category
+--Number of products in each category
+--Identify the product category with the highest number of products.
+--Display the results in a table with the following columns:
+--Product Category
+--Number of Products
+
+ SELECT
+        product_category AS "Product Category",
+        COUNT(product_name) AS "Number of Products"
+FROM
+ products
+GROUP BY "Product Category"
+ORDER BY "Number of Products" DESC
+LIMIT 1
+
+--Write a SQL SELECT query that retrieves the following information:
+--Order date
+--Number of orders placed on each date
+--Identify the order date with the highest number of orders placed.
+--Display the results in a table with the following columns:
+--Order Date
+--Number of Orders
+ SELECT
+        order_date AS "Order Date",
+        COUNT(order_id) AS "Number of Orders"
+FROM
+ orders
+GROUP BY "Order Date"
+ORDER BY "Number of Orders" DESC
+LIMIT 1
