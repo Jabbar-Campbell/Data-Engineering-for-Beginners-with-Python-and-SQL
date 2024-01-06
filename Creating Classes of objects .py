@@ -245,3 +245,4 @@ def merge_sorted_lists(list1, list2):
     merged_list.extend(list2[j:])
  
     return merged_list
+    

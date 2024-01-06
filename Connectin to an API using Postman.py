@@ -79,3 +79,73 @@ df = df.drop('type', axis=1)
 df
 
 df.to_csv(my_path_books.csv, encoding='utf-8', index=False)
+
+# After you connect to the dataframe you can make changes and wrangle
+# the Data the code below was created using VSCODE interactive mode and then
+# exported 
+
+pd.DataFrame(x)
+
+# %%
+df = pd.DataFrame(x)
+
+# %%
+df.head()
+
+# %%
+
+
+# iterating the columns
+for col in df.columns:
+    print(col)
+
+# %%
+df['docs'].str.split(',')
+
+# %%
+df['docs']
+
+# %%
+df['docs'].str.split(':')
+
+# %%
+df['docs'][1]
+
+# %%
+df['docs'][2] 
+
+# %%
+df['docs'][3] 
+
+# %%
+df['docs'][1] 
+
+# %%
+df.iloc[1: , :]
+
+# %%
+df
+
+# %%
+df['docs']
+
+# %%
+type(df['docs'][1])
+
+# %%
+df['docs'].apply(pd.Series)
+
+# %%
+df=df['docs'].apply(pd.Series)
+
+# %%
+df.drop('type', axis=1)
+
+# %%
+for col in df.columns:
+    print(col)
+
+# %%
+response.text
+
+
