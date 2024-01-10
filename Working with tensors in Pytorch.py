@@ -139,23 +139,52 @@ print(a)
 
 ########################################################## TRANSFORMATION #################################################################
 # in the past transforming data was done by looping thru a column of data
-# another why is to def a class of the data and then def functions within that transfrom the data/tensors
-# the advantage of which is you dont have to be as explicit it works
-# there is a function/method/transformation that is inherit to the new class
-# for example....
+# another why is to def a class of the data and then make functions within that class to transfrom the data 
+# now there is a function/method/transformation that is inherit to this  new class
+# CLASS/FUNCTIONS can do different things and be called in seq for example....
 
-
+# CLASS 1
 class add_mult(object):                 #add mult is a new class
     def __init__(self,addx=1,muly=1):   #class and variables must be initialize  
         self.addx=addx                  #naming convention defined
         self.muly=muly                  #naming convention defined
 
     def __call__(self,sample):          #Here we create a function with variables above
-        x=sample[0]
-        y=sample[1]
-        x=x+self.addx                   #transform
-        y=y*self.muly                   #transform
+        x=sample[0]                     #takes an index
+        y=sample[1]                     #takes an index
+        x=x+self.addx                   #transform by adding 1
+        y=y*self.muly                   #transform by multuplying 1
         sample=x,y                      #output variable
         return sample                   #is returned
     
+# CLASS 2
+class mult(object):                   #mult is a second class
+    def __init__(self,muly=100):      #class and variables must be initialize  
+        self.mul=mul                  #naming convention defined
+
+    def __call__(self,sample):        #Here we create a function with variables above
+        x=sample[0]                   #takes an index
+        y=sample[1]                   #takes an index
+        x=x*self.mul                  #transform by multplying by 100
+        y=y*self.mul                  #transform by multplying by 100
+        sample=x,y                    #output variable
+        return sample                 #is returned
+
+# to run transforms in series the compose() function from the transforms library in the torchvision module
+# with this we can call multiple transformations for each element of a list
+from torchvision import transform
+
+My_transformation = transform.compose([add_mult(), mult()])
+
+
+
+# QUESTION FOR ROMEL
+# THIS SEEMS COMPLICATED WHY CANT WE JUST MAKE FUNCTIONS OUTSIDE OF THE CLASS AND STRING THEM TOGETHER
+# CLASS ALSO CAN BE  FUNCTIONS WHICH IS CONFUSING
+# I GUESS THIS WAY INSTEAD OF A FUNCION BEING PART OF THE GLOBAL ENVIRONMENT YOU CAN HAVE IT AS A PART OF THE CLASS
+# SO YOU WONT HAVE TO REMEMBER WHAT FUNCTION TO CALL ON WHOM  ?????? 
+# WHY NOT JUST HAVE FUNCTIONS CALLED "ADD_MULT" AND "MULT"
+
+
+
 
