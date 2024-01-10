@@ -93,3 +93,69 @@ B = torch.tensor([[1,1],[1,1],[-1,1]])
 print(torch.mm(A,B))
 
 
+
+
+
+
+
+
+
+# ########################################   DERIVATIVES #############################################################################################
+
+# all functions/ formulas have a derivative which describes the
+# slope across the entire equation/polynomial as a  rate of change 
+# for example the exponential x^3 possess a derivative of 3x^2
+# pytorch allows us to compute the derivative of a function with the x.backward() function where Y is the equation
+# and allows us to plug in a vlaue for our newly created derivative with  the x.grad() = function where x is our value 
+# its important to set the requires_grad argument to True.
+
+q=torch.tensor(1.0,requires_grad=True) # define value in this case a scalar tensor
+my_function=2q**3+q                    # define function
+my_function.backward()                 # creates derivative
+q.grad                                 # solves derivative with value q 
+
+
+# in the case of multiple variable a each variable is set to a constant 1 and a partial derivative is
+# created. hence for every variable a New Derivative is created.
+# we can then set each to a given valu
+
+u = torch.tensor(2.0, requires_grad = True) # define values some formulas may use
+v = torch.tensor(1.0, requires_grad = True) # 2 or more values
+my_function = u * v + (u * v) ** 2          # define fucntion
+f.backward()                                # this creates 2 partial Derivatives
+print("The result is ", u.grad)             # we can calulate an answer for each
+print("The result is ", v.grad)             # pytorch automatically adjust which derivative
+
+
+# another way to  quickly list out a tensor is with the torch.ones(length,x) command
+# it list the scalar 1 as long as the length argument
+
+a=torch.ones(length,3)
+print(a)
+
+
+
+
+
+########################################################## TRANSFORMATION #################################################################
+# in the past transforming data was done by looping thru a column of data
+# another why is to def a class of the data and then def functions within that transfrom the data/tensors
+# the advantage of which is you dont have to be as explicit it works
+# there is a function/method/transformation that is inherit to the new class
+# for example....
+
+
+class add_mult(object):                 #add mult is a new class
+    def __init__(self,addx=1,muly=1):   #class and variables must be initialize  
+        self.addx=addx                  #naming convention defined
+        self.muly=muly                  #naming convention defined
+
+    def __call__(self,sample):          #Here we create a function with variables above
+        x=sample[0]
+        y=sample[1]
+        x=x+self.addx                   #transform
+        y=y*self.muly                   #transform
+        sample=x,y                      #output variable
+        return sample                   #is returned
+    
+

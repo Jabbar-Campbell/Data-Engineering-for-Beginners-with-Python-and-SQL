@@ -1,8 +1,12 @@
 
 # here we create a class called car
-# create attributes for it
-# those attributes can then be used in a function
-# that will be methods inherent to the class
+# classes must be intialized with any variables/attributes you plan to reference by ...
+# "def __init__(self,var1,var2,var3)"
+# each variables/attributes is declared and assigned a name by...
+# self.var1 
+# self.var2 etc
+# we can now create functions/methods for this class using attribute names
+# that will be inherent to the class going forward
 
 class Car:
     def __init__(self,make,model,year):
@@ -13,7 +17,7 @@ class Car:
     def display_info(self):
         return f"{self.year} {self.make} {self.model}"
 
-# we can no create objects of class car and invoke methods by...
+# we can now create objects of class car and invoke methods by...
 my_car = Car(make="Acura", model="TSX", year=2004)
 my_car.display_info()
 
