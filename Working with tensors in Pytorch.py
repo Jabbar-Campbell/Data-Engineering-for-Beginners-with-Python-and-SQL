@@ -12,6 +12,7 @@ import torch
 # we can print out the version of torch with
 torch.__version__
 
+
 # ############################################################## 1D Tensor #############################################################################################
 # Torch has a variable type tensor that similar to a list and
 # can be indexed in a similar way here we start at the first index and stop at the third.
@@ -110,7 +111,7 @@ print(torch.mm(A,B))
 # its important to set the requires_grad argument to True.
 
 q=torch.tensor(1.0,requires_grad=True) # define value in this case a scalar tensor
-my_function=2q**3+q                    # define function
+my_function=2*q**3+q                    # define function
 my_function.backward()                 # creates derivative
 q.grad                                 # solves derivative with value q 
 
@@ -122,7 +123,7 @@ q.grad                                 # solves derivative with value q
 u = torch.tensor(2.0, requires_grad = True) # define values some formulas may use
 v = torch.tensor(1.0, requires_grad = True) # 2 or more values
 my_function = u * v + (u * v) ** 2          # define fucntion
-f.backward()                                # this creates 2 partial Derivatives
+my_function.backward()                                # this creates 2 partial Derivatives
 print("The result is ", u.grad)             # we can calulate an answer for each
 print("The result is ", v.grad)             # pytorch automatically adjust which derivative
 
@@ -130,7 +131,7 @@ print("The result is ", v.grad)             # pytorch automatically adjust which
 # another way to  quickly list out a tensor is with the torch.ones(length,x) command
 # it list the scalar 1 as long as the length argument
 
-a=torch.ones(length,3)
+a=torch.ones(3)
 print(a)
 
 
@@ -160,7 +161,7 @@ class add_mult(object):                 #add mult is a new class
 # CLASS 2
 class mult(object):                   #mult is a second class
     def __init__(self,muly=100):      #class and variables must be initialize  
-        self.mul=mul                  #naming convention defined
+        self.mul=mult                  #naming convention defined
 
     def __call__(self,sample):        #Here we create a function with variables above
         x=sample[0]                   #takes an index
@@ -172,9 +173,10 @@ class mult(object):                   #mult is a second class
 
 # to run transforms in series the compose() function from the transforms library in the torchvision module
 # with this we can call multiple transformations for each element of a list
-from torchvision import transform
+    
+from torchvision import transforms
 
-My_transformation = transform.compose([add_mult(), mult()])
+My_transformation = transforms.compose([add_mult(), mult()])
 
 
 
