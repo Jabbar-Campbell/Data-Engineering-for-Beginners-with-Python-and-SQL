@@ -1,9 +1,10 @@
 import pandas as pd 
 import os 
 import torch
+import matplotlib.pyplot as plt
+import torch
 
 from PIL import Image
-from matplotlib.pyplot import plt
 from torch.utils.data import Dataset, DataLoader
 
 
@@ -65,10 +66,38 @@ class my_img_class(Dataset):
             image=self.transform(image)
         return image,y
     
-
+# new class can be used with the added functions within
+# its almost like cloning and environment
+my_img_class.__getitem__(5)
 
 # ASK ROMEL
 # POSSIBLE REASONS FOR MAKING A CLASS WITH FUNCTIONS WITHING
 #1)??
 #2)???
 #3)???
+    
+
+# torchvision has some image processing transformations
+# such as.....transforms.CenterCrop
+# compose lets us chain these transforms together
+torchvision.transforms.CenterCrop()
+
+
+
+my_tranformed_image= transforms.Compose[(transforms.CenterCrop()),
+                                       (transforms.ToTensor()),
+                                       (other_transforms)]
+
+
+
+# Torchvision has some datasets available
+# including the MNIST dataset
+# it allows us to call on it and ....
+import torchvision.datasets as dsets   
+
+my_dataset = dsets.MNIST(root = './data',                   #....pick the root directory
+                          train = False,                    #...decide weather to use the training set
+                          download = True,                  # download if you dont already have the data
+                          transform=transforms.ToTensor())   # convert it to a tensor
+
+# I wonder if you can make you're own data sets and feed it in to dsets.

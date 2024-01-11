@@ -171,12 +171,20 @@ class mult(object):                   #mult is a second class
         sample=x,y                    #output variable
         return sample                 #is returned
 
+    
+# new class can be used with the added functions within its almost like cloning an environment
+add_mult.__call__() 
+mult.__call__()  
+
+
+
 # to run transforms in series the compose() function from the transforms library in the torchvision module
 # with this we can call multiple transformations for each element of a list
     
 from torchvision import transforms
 
 My_transformation = transforms.compose([add_mult(), mult()])
+
 
 
 
