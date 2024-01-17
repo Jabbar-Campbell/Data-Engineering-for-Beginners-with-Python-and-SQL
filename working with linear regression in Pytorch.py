@@ -81,4 +81,4 @@ my_model.forward(x)
 # thanks to def __call__
 my_model(x)
 
-model.state_dict() #returns a dictionary
+model.state_dict() #returns a dictionary  
