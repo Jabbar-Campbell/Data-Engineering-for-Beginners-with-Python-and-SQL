@@ -27,7 +27,7 @@ class data_set(Dataset):
         self.b = torch.tensor(b,requires_grad=True)
         self.x = torch.tensor.arange(-3,3,0.1.view(-1,1)) # range from -3 to 3 by increments of .1 view adds another dimension not sure why this is needed
         self.f = w*x+b
-        self.y= f + .1*torch.randn(x.size()) 
+        self.y= self.f + .1*torch.randn(x.size()) 
         self.len = self.x.shape[0] 
         if train == True:
             self.y[0] = 0                                  # outlier values have been set (ideally we'd sample)
@@ -93,8 +93,7 @@ for i,learning_rate in enumerate(learning_rates):
     optimizer = optim.SGD(model.parameters(), lr = learning_rate )
 
     for epoch in range(epochs): 
-        # I dont know if this returns a single model or a list of models for each epoch ????????????????????
-        # I dont see anything being returned ????????????????????
+        # 60 models are being generated one for each point
         for x,y in trainloader:       # for every point in the sampled data of batch size 1
             yhat = model(x)           # predict a y value 
             loss = criterion(yhat,y)  # calculate a loss for that point
@@ -110,16 +109,16 @@ for i,learning_rate in enumerate(learning_rates):
                 min_loss = loss_val
                 torch.save(model.state_dict(),'filename_best_model.pt')
 
-    # In each epoch the best model is compared to the entire data 
-    # the model and its cost are appended to a list
-    yhat2 = model(dataset.x)          # what model is it using??????????????????????
+    # for each epoch the model is compared
+    # to actual data and appended to a list
+    yhat2 = model(dataset.x)          
     loss = criterion(yhat,dataset.y)
     validation_error[i]= loss.item()
     models.append(model)
 
-    # In each epoch the best model is compared to the validation data
+    # In each epoch the model is compared to the validation data
     # the model and its cost are appended to a list
-    yhat3 = model(valdata.x)         # what model is it using??????????????????????
+    yhat3 = model(valdata.x)         
     loss = criterion(yhat,valdata.y)
     validation_error[i]= loss.item()
     models.append(model)
@@ -130,3 +129,9 @@ for i,learning_rate in enumerate(learning_rates):
     checkpoint['loss']= loss
     checkpoint['epoch']= epoch
     torch.save(checkpoint,checpoint_path)
+
+
+# we load the state dictionary and the loss and resume if need start and stop at a certain iteration
+optimizer = optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+loss = checkpoint['Loss']
+

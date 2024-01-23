@@ -12,18 +12,23 @@
 
 from sklearn.metrics import mean_squared_error
 from math import sqrt
+y_actual = []
+y_predicted = []
 rmse = sqrt(mean_squared_error(y_actual, y_predicted))
 
-# to find this we need to take the Derivative of our RMSE 
+# to find these optimal parameters for minimal loss 
+# we need to take the Derivative of our RMSE 
 # RMSE.backward()     ---see also .backward()----
+# and
 # my_parameters.grad  ---see also .grad----
-# and swap in values associated with slope and intercept. The  values that give us the
+# and swap in data values. The  values that give us the
 # lowest RMSE is the best fit.
 # in linear regression fittment and there fore predictions are dependent on 2 things
 # the slope changeing and the intercept chaneging
 
 # this process of swapping in values into the Derivative of our loss f(x) to get new batches of predictions 
-# summarized by the RMSE calculation is called GRADIENT DESCENT
+# summarized by the RMSE calculation is called
+#       GRADIENT DESCENT
 
 
 
@@ -251,9 +256,6 @@ dataset = data_set(w=-15,b=-10, train=True) # True changes the data
 valdata = data_set(w=-15,b=-10,train=False) # False leaves the data as is
 
 
-# DataLoader takes a subset of our data acccording to batch
-trainloader = DataLoader(dataset = dataset, batch_size=1) 
-
 
 ## we can also create a new object for linear regression
 # that inherits much of the nn.Module functions from the torch.nn library
@@ -263,57 +265,59 @@ class LR(nn.Module):                                          # name of our obje
         super(LR.self).__init__()                             # inherit parent attributes 
         self.linear = nn.Linear(input_size, output_size)      # thanks to inheritance we can call the "Linear" f(x) using variables
 
-    def forward(self,x):                                      # I'm not sure what x is here????
+    def forward(self,x):                                      # x allows us to reference the variable in the function
         out = self.linear(x)
         return out
     
 
 # with this new class we can make new objects with other features not included with Linear
-    
-# what we previously made a function for loss  torch.nn has MSELoss()
-#   def criterion(yhat,y):                        
-#        return torch.mean((yhat-y)**2)
-
-criterion = nn.MSELoss()
+   # DataLoader takes a subset of our data acccording to batch
 
 epochs = 10
 learning_rates = [.00001,.0001,.001,.01,.1,1]
+
+trainloader = DataLoader(dataset = dataset, batch_size=1)        
+model = LR(input_size=2,output_size=1)                           # model is now a linear regression of the appriate  features and sample rows
+optimizer = optim.SGD(model.parameters(), lr = learning_rates)
 validation_error = torch.zeros(len(learning_rates))
 models = []
+
+
+# what we previously made a function for loss  torch.nn has MSELoss()
+criterion = nn.MSELoss()
+
+
 
 
 
 from torch import optim
 for i,learning_rate in enumerate(learning_rates):
-    model= LR[1,1]                    # linear model with input size
+    model= LR(input_size = 1, output_size = 1)                     # model is now a linear regression of the appropriate  features and sample rows
     optimizer = optim.SGD(model.parameters(), lr = learning_rate )
 
     for epoch in range(epochs):
-        #I dont know if this returns a single model or a list of models for each epoch ????????????????????
-        # I dont see anything being returned ????????????????????
+        # this generates 60 models -3 -3 by .1
         for x,y in trainloader:       # for every point in the sampled data of batch size 1
             yhat = model(x)           # predict a y value 
             loss = criterion(yhat,y)  # calculate a loss for that point
             optimizer.zero_grad()     # resets the gradient
             loss.backward()           # creates a set of derivatives 
-            optimizer.step()          # solves each/all derivative  at that point
+            optimizer.step()          # solves each/all derivative  at that point which stores the best criterion
 
-    # In each epoch the best model is compared to the entire data 
-    # the model and its cost are appended to a list
-    yhat2 = model(dataset.x)          # what model is it using??????????????????????
+    # for each epoch there are 60 models
+    yhat2 = model(dataset.x)          # for every set of x the model gives 1 output as defined earlier!   
     loss = criterion(yhat,dataset.y)
     validation_error[i]= loss.item()
     models.append(model)
 
     # In each epoch the best model is compared to the validation data
     # the model and its cost are appended to a list
-    yhat3 = model(valdata.x)         # what model is it using??????????????????????
+    yhat3 = model(valdata.x)         
     loss = criterion(yhat,valdata.y)
     validation_error[i]= loss.item()
     models.append(model)
 
-# in the ened we shold have 2 lists of models for every learning rate....
-# the lists are 10 models long i think   
+# In the end there should be one model per learning rate  
      
 
 
@@ -345,15 +349,14 @@ checkpoint = {'epoch':None,                         # assign each epoch here
               'Loss':None} 
 
 
-# Training with EARLY STOPPING
+# Training with EARLY STOPPING with checkpoints
 from torch import optim
 for i,learning_rate in enumerate(learning_rates):
-    model= LR[1,1]
+    model= LR(input_size=1,output_size=1)            # model is now a linear regression of the appriate  features and sample rows
     optimizer = optim.SGD(model.parameters(), lr = learning_rate )
 
     for epoch in range(epochs): 
-        # I dont know if this returns a single model or a list of models for each epoch ????????????????????
-        # I dont see anything being returned ????????????????????
+        # 60 models are generated -3 to 3 by .1
         for x,y in trainloader:       # for every point in the sampled data of batch size 1
             yhat = model(x)           # predict a y value 
             loss = criterion(yhat,y)  # calculate a loss for that point
@@ -361,7 +364,7 @@ for i,learning_rate in enumerate(learning_rates):
             loss.backward()           # creates a set of derivatives 
             optimizer.step()          # solves each/all derivative  at that point
             
-            # if the loss is greater we go to the next model
+            # if the loss is greater we go to the next model of  the 60 one is returned
             loss_train = criterion(model(trainloader.x),trainloader.y).item()
             loss_val= criterion(model(valdata.x),valdata.y).item()
             if loss_val < min_loss:  
@@ -369,16 +372,14 @@ for i,learning_rate in enumerate(learning_rates):
                 min_loss = loss_val
                 torch.save(model.state_dict(),'filename_best_model.pt')
 
-    # In each epoch the best model is compared to the entire data 
-    # the model and its cost are appended to a list
-    yhat2 = model(dataset.x)          # what model is it using??????????????????????
+    yhat2 = model(dataset.x)   # for every set of x the model gives 1 output as defined earlier!       
     loss = criterion(yhat,dataset.y)
     validation_error[i]= loss.item()
     models.append(model)
 
     # In each epoch the best model is compared to the validation data
     # the model and its cost are appended to a list
-    yhat3 = model(valdata.x)         # what model is it using??????????????????????
+    yhat3 = model(valdata.x)         
     loss = criterion(yhat,valdata.y)
     validation_error[i]= loss.item()
     models.append(model)
@@ -391,7 +392,10 @@ for i,learning_rate in enumerate(learning_rates):
     torch.save(checkpoint,checpoint_path)
 
 
-# in the ened we shold have 2 lists of models for every learning rate....
-# the lists are 10 models long i think    
+# we load the state dictionary and the loss and resume if need start and stop at a certain iteration
+optimizer = optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+loss = checkpoint['Loss']
 
+
+# in the end there should be 1 model per learning rate soa  list of 6
 
