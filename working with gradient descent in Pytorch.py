@@ -199,8 +199,8 @@ for epoch in range(4):                          # for every element of data mult
     for x,y in zip(x,y):                         # STOCHASTIC GRADIENT DESCENT calculates loss for each point as a SCALAR!!!!!!!!!!!!!!!!!!
         Yhat = forward(x)                       # but why do it 4 times?????
         loss = criterion(Yhat,y)
-        loss.backward()                         #gives us the derivative of 
-        optimizer.step()                        # This solves the partial derivatives of all parameters
+        loss.backward()                         # This solves the  derivative 
+        optimizer.step()                        # updates the optimizer
 ##########################################################################################################################################
 
 
@@ -301,8 +301,8 @@ for i,learning_rate in enumerate(learning_rates):
             yhat = model(x)           # predict a y value 
             loss = criterion(yhat,y)  # calculate a loss for that point
             optimizer.zero_grad()     # resets the gradient
-            loss.backward()           # creates a set of derivatives 
-            optimizer.step()          # solves each/all derivative  at that point which stores the best criterion
+            loss.backward()           # solves each/all derivative  at that point which stores the best criterion
+            optimizer.step()          # updates the optimizer
 
     # for each epoch there are 60 models
     yhat2 = model(dataset.x)          # for every set of x the model gives 1 output as defined earlier!   
@@ -361,8 +361,8 @@ for i,learning_rate in enumerate(learning_rates):
             yhat = model(x)           # predict a y value 
             loss = criterion(yhat,y)  # calculate a loss for that point
             optimizer.zero_grad()     # resets the gradient
-            loss.backward()           # creates a set of derivatives 
-            optimizer.step()          # solves each/all derivative  at that point
+            loss.backward()           # solves each/all derivative  at that point
+            optimizer.step()          # updates the optimizer
             
             # if the loss is greater we go to the next model of  the 60 one is returned
             loss_train = criterion(model(trainloader.x),trainloader.y).item()
