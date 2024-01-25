@@ -83,12 +83,12 @@ class logistic_regression(nn.Module):                                # our class
         return out
 
 
-
+dataset = (torch.tensor[[1,4,.8],[100,450,75]] )                    # 3d data with 2 samples
 trainloader = DataLoader(dataset = dataset ,batch_size=1)           # get training data
-model = logistic_regression(1,1)                                    # establish model based on data
+model = logistic_regression(3,1)                                    # establish model based on data dimension!!!!
 optimizer = optim.SGD(model.parameters(lr = 0.01))                  # Stochastic gradient descent optimizer
 
-for epoch in range(epochs):
+for epoch in range(100):
         for x,y in trainloader:       # for every point in the sampled data of batch size 1
             yhat = model(x)           # predict a y value 
             loss = criterion(yhat,y)  # calculate a CROSS ENTROPY LOSS for that point
