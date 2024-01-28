@@ -6,7 +6,7 @@ from torch.utils.data.dataloader import DataLoader
 
 
 ######################################################### READ IN DATA ##############################################################
-df = pd.read_csv("C:/Users/jabba/OneDrive/Desktop/Sandbox/Python/Kaggle/high_diamond_ranked_10min.csv")
+df = pd.read_csv("C:/Users/jabba/OneDrive/Desktop/Sandbox/Python/high_diamond_ranked_10min.csv")
 print(df.columns)                      # blue wins is our classifier
 print(df.shape)                        # 40 features with 9879 samples
 my_list1 = df.columns.tolist()         # list of features
