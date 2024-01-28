@@ -77,18 +77,18 @@ checkpoint = {'epoch':None,                         # assign each epoch here
 
 
 for epoch in range(100):
-        for my_list,blueWins in trainloader:       # for every point in the sampled data of batch size 1
-            yhat = model(my_list)                  # predict a y value from all features except blue wins???
-            loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for those points vs our predictor
-            optimizer.zero_grad()                  # resets the gradient
-            loss.backward()                        # creates a set of derivatives from the loss equation and solves 
-            optimizer.step()                       # update the gradient descent optimizer
-checkpoint['epoch']= epoch
-checkpoint['model_state_dict']= model.state_dict()
-checkpoint['optimizer_state_dict']= optimizer.state_dict()
-checkpoint['loss']= loss
-checkpoint['epoch']= epoch
-torch.save(checkpoint,checpoint_path)
+    for my_list,blueWins in trainloader:       # for every point in the sampled data of batch size 1
+        yhat = model(my_list)                  # predict a y value from all features except blue wins???
+        loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for those points vs our predictor
+        optimizer.zero_grad()                  # resets the gradient
+        loss.backward()                        # creates a set of derivatives from the loss equation and solves 
+        optimizer.step()                       # update the gradient descent optimizer
+    checkpoint['epoch']= epoch
+    checkpoint['model_state_dict']= model.state_dict()
+    checkpoint['optimizer_state_dict']= optimizer.state_dict()
+    checkpoint['loss']= loss
+    checkpoint['epoch']= epoch
+    torch.save(checkpoint,checpoint_path)
 ##########################################################################################################################################
 
 # at the end there should be a model for each step or sample 
