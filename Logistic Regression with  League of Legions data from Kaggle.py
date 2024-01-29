@@ -4,9 +4,11 @@ from torch import optim
 from torch.utils.data.dataloader import DataLoader
 
 
+import os
+Path = os.path.join(os.getcwd(), "high_diamond_ranked_10min.csv")
 
 ######################################################### READ IN DATA ##############################################################
-df = pd.read_csv("C:/Users/jabba/OneDrive/Desktop/Sandbox/Python/high_diamond_ranked_10min.csv")
+df = pd.read_csv(Path)
 print(df.columns)                      # blue wins is our classifier
 print(df.shape)                        # 40 features with 9879 samples
 my_list1 = df.columns.tolist()         # list of features
@@ -15,7 +17,7 @@ my_list = my_list1.remove('blueWins')               # list except the our y pred
 # we could split the data frame into x and y 
 # but its better to partion the data into Train and Validation data
 #x = df.drop('blueWins', axis=1)
-#y = df['blueWins']
+y = df['blueWins']
 
 # convert to a tensor 
 # import torch
