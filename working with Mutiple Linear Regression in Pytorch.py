@@ -77,7 +77,7 @@ from torch.utils.data import DataLoader
 # NOTICE HOW THE TENSORS HAVE MULTIDIMENSIONS NOW
 class data_set(Dataset):
     def __init__(self,w,b, train = True):
-        #super(data_set.self).__init__()                   #inherit parent attributes 
+        #super(data_set, self).__init__()                   #inherit parent attributes 
         self.w = torch.tensor(w,requires_grad=True)                                  # this will be 4d ([w1,w2,w3,w4]
         self.b = torch.tensor(b,requires_grad=True)                                  # I think bias should be 4d as  well ([b1,b2,b3,b4])
         self.x = torch.tensor.arange( [ [1, 3.3 , .3 , 7] , [ 1 ,3.3,  .3 ,   7]  ]) # the data  is a 4d tensor with 2 samples

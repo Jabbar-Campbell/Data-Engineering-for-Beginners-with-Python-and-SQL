@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import pandas as pd
 from torch import optim
@@ -5,6 +6,8 @@ from torch.utils.data.dataloader import DataLoader
 
 
 import os
+
+
 Path = os.path.join(os.getcwd(), "high_diamond_ranked_10min.csv")
 
 ######################################################### READ IN DATA ##############################################################
@@ -17,21 +20,12 @@ my_list = my_list1.remove('blueWins')               # list except the our y pred
 # we could split the data frame into x and y 
 # but its better to partion the data into Train and Validation data
 #x = df.drop('blueWins', axis=1)
-y = df['blueWins']
+#y = df['blueWins']
 
 # convert to a tensor 
 # import torch
 # import numpy as np
-# tensor_df = torch.Tensor(np.array(df))
-
-
-
-# make validation and training data
-
-train_data, val_data = torch.utils.data.random_split(df,[4939,(9879-4939)], generator=torch.Generator().manual_seed(1))
-train_loader = DataLoader(dataset=train_data, shuffle=True, batch_size=1)
-val_loader = DataLoader(dataset=val_data, shuffle=False, batch_size=1)
-##########################################################################################################################################
+# tensor_df = torch.Tensor(df.to_numpy())
 
 
 
@@ -57,6 +51,60 @@ class logistic_regression(nn.Module):                                # our class
 
 
 
+############################################### Create a Dataset Class #################################################
+# I think once ew make train data and val data an object
+# we can reference x and y in our training loop
+# if we first define them as tensors  x and y
+from torch.utils.data import Dataset
+
+class data_set(Dataset):
+    def __init__(self,df):
+        super(data_set, self).__init__()                                      
+        self.x = torch.Tensor(df.drop('blueWins', axis=1).to_numpy())
+        self.y = torch.Tensor(df['blueWins'].to_numpy())
+        self.len = self.x.shape[0] 
+
+    def __getitem__(self,index):
+        return self.x[index],self.y[index]
+
+    def __len__(self):
+        return self.len
+    
+   # def __getitem__(self, idx):
+    #    if torch.is_tensor(idx):
+     #       idx = idx.tolist()
+
+    
+
+
+##########################################################################################################################################
+
+dataset = data_set(df)
+# I can't get this into the train loader
+# DataLoader needs the dataset class to have certain attributes
+# in order to make a useful train loader object 
+trainloader = DataLoader(dataset=dataset, shuffle=False, batch_size=1)
+
+
+
+
+
+
+# make validation and training data
+# 9879/2 and then the rest is validation
+# it will split df but now it will be a tensor object
+train_data, val_data = torch.utils.data.random_split(df,[4939,(9879-4939)], generator=torch.Generator().manual_seed(1))
+
+# now the df is an object of a custom built class
+# with the data divided as x an y tensors
+# make training and validation data objects and feed into the DataLoader()
+train_data  =  data_set(train_data)  # :(  
+val_data  =  data_set(val_data)     # :( 
+
+trainloader = DataLoader(dataset=train_data, shuffle=True, batch_size=1)
+#val_loader = DataLoader(dataset=val_data, shuffle=True, batch_size=1)
+ 
+
 
 
 
@@ -80,8 +128,8 @@ checkpoint = {'epoch':None,                         # assign each epoch here
 
 
 for epoch in range(100):
-    for my_list,blueWins in trainloader:       # for every point in the sampled data of batch size 1
-        yhat = model(my_list)                  # predict a y value from all features except blue wins???
+    for x,y in trainloader:                   # for every iterations of x y in our new data class
+        yhat = model(x)                  # predict a y value from all features except blue wins???
         loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for those points vs our predictor
         optimizer.zero_grad()                  # resets the gradient
         loss.backward()                        # creates a set of derivatives from the loss equation and solves 
@@ -89,8 +137,7 @@ for epoch in range(100):
     checkpoint['epoch']= epoch
     checkpoint['model_state_dict']= model.state_dict()
     checkpoint['optimizer_state_dict']= optimizer.state_dict()
-    checkpoint['loss']= loss
-    checkpoint['epoch']= epoch
+    checkpoint['Loss']= loss
     torch.save(checkpoint,checpoint_path)
 ##########################################################################################################################################
 
@@ -111,14 +158,27 @@ train_data.dataset
 
 ### "for every my_list,blueWins in train_loader" (x1,x2,x3.....x40,y) isn't working
 ### Once I see it maybe I can figure out how to iterate thru it.
-train_loader.dataset 
+trainloader.dataset 
 
-train_loader_iter = iter(train_loader)
+train_loader_iter = iter(trainloader)
 # I can see the object type
 type(train_loader_iter) 
-### Trying to look at the train_loader data but can't :(
+# creating an object with the proper attributes has allowed me
+# to iterate thru the trainloader output from DataLoader !!! :) 
 for i in enumerate(train_loader_iter):
       print(i)
+
+# will have the followin attributes
+trainloader._get_iterator
+
+['_DataLoader__initialized','__annotations__','__class__','__class_getitem__',
+ '__delattr__','__dict__','__dir__','__doc__','__eq__','__format__','__ge__',
+ '__getattribute__', '__getstate__','__gt__','__hash__','__init__',
+ '__init_subclass__','__iter__','__le__','__len__','__lt__','__module__',
+ '__ne__','__new__','__orig_bases__','__parameters__','__reduce__','__reduce_ex__',
+ '__repr__','__setattr__','__sizeof__','__slots__','__str__','__subclasshook__',
+ '__weakref__','_auto_collation','_get_iterator','_index_sampler','_is_protocol',
+'check_worker_number_rationality','multiprocessing_context']
 
 
 
