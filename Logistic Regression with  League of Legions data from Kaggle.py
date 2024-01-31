@@ -40,6 +40,7 @@ val_loader = DataLoader(dataset=val_data, shuffle=False, batch_size=1)
 
 
 
+
 ############################################### Create a Logistic Regression Model Object#################################################
 
 import torch.nn as nn
