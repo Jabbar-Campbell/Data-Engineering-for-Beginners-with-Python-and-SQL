@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import pandas as pd
 from torch import optim
+from torch.nn.modules.activation import Sigmoid
 from torch.utils.data.dataloader import DataLoader
 
 
@@ -41,15 +42,19 @@ import torch.nn as nn
 class logistic_regression(nn.Module):                                # our class with the objects we;d like to copy
     def __init__(self,in_size):                                      # initalize self along with any other arguments
         super(logistic_regression,self).__init__()                   # give logistic regression the features of nn.Module
-        self.linear = nn.Linear(in_features = in_size , out_features=1)   # new variable linear is a model based on Linear()
+        self.linear = nn.Linear(in_features = in_size , out_features =1 )   # new variable linear is a model based on Linear()
     
     def forward(self,x):
-        out = nn.sigmoid(self.linear(x))                            # a new function that takes the linear model of x and puts it thru the Sigmoid function
-        return out
+        out = self.linear(x)                            # a new function that takes the linear model of x and puts it thru the Sigmoid function
+        return torch.sigmoid(out)
+    
+    def __call__(self,x):                       # I think by using __call__ you dont need to name the function
+        out = self.linear(x)
+        return torch.sigmoid(out)
 
 ##########################################################################################################################################
 
-
+ 
 
 ############################################### Create a Dataset Class #################################################
 # I think once ew make train data and val data an object
@@ -60,8 +65,8 @@ from torch.utils.data import Dataset
 class data_set(Dataset):
     def __init__(self,df):
         super(data_set, self).__init__()                                      
-        self.x = torch.Tensor(df.drop('blueWins', axis=1).to_numpy())
-        self.y = torch.Tensor(df['blueWins'].to_numpy())
+        self.x = torch.Tensor(df.iloc[:, np.r_[0, 2:40]].to_numpy()) # matrix 1  should match model input
+        self.y = torch.Tensor(df.iloc[:,[1]] .to_numpy())             # matix 2 
         self.len = self.x.shape[0] 
 
     def __getitem__(self,index):
@@ -75,7 +80,7 @@ class data_set(Dataset):
      #       idx = idx.tolist()
 
     
-
+ 
 
 ##########################################################################################################################################
 
@@ -90,19 +95,19 @@ trainloader = DataLoader(dataset=dataset, shuffle=False, batch_size=1)
 
 
 
-# make validation and training data
-# 9879/2 and then the rest is validation
+# make validation and training data 9879/2 and then the rest is validation
 # it will split df but now it will be a tensor object
-train_data, val_data = torch.utils.data.random_split(df,[4939,(9879-4939)], generator=torch.Generator().manual_seed(1))
 
-# now the df is an object of a custom built class
-# with the data divided as x an y tensors
+# train_data, val_data = torch.utils.data.random_split(df,[4939,(9879-4939)], generator=torch.Generator().manual_seed(1))
+
+# now the df is an object of a custom built class with the data divided as x an y tensors
 # make training and validation data objects and feed into the DataLoader()
-train_data  =  data_set(train_data)  # :(  
-val_data  =  data_set(val_data)     # :( 
 
-trainloader = DataLoader(dataset=train_data, shuffle=True, batch_size=1)
-#val_loader = DataLoader(dataset=val_data, shuffle=True, batch_size=1)
+#train_data  =  data_set(train_data)  # :(  
+#val_data  =  data_set(val_data)     # :( 
+
+# trainloader = DataLoader(dataset=train_data, shuffle=True, batch_size=1) :(
+# val_loader = DataLoader(dataset=val_data, shuffle=True, batch_size=1)    :(   
  
 
 
@@ -114,8 +119,8 @@ trainloader = DataLoader(dataset=train_data, shuffle=True, batch_size=1)
 ###########################################################TRAIN THE MODEL with Gradient Descent ############################################
 
 criterion = nn.BCELoss()                                           # 3d data with 2 samples
-trainloader = DataLoader(dataset = train_data ,batch_size=1)           # get training data
-model = logistic_regression(40)                                # Feed our model object based on data dimension!!!!
+#trainloader = DataLoader(dataset = train_data ,batch_size=1)           # get training data
+model = logistic_regression(39)                                # Feed our model object based on data dimension!!!!
 optimizer = optim.SGD(model.parameters(),lr=0.01)                  # Stochastic gradient descent optimizer
 criterion = nn.BCELoss()
 checpoint_path = 'checkpoint_model.pt'              # sometimes we need to write out each epoch
@@ -128,8 +133,8 @@ checkpoint = {'epoch':None,                         # assign each epoch here
 
 
 for epoch in range(100):
-    for x,y in trainloader:                   # for every iterations of x y in our new data class
-        yhat = model(x)                  # predict a y value from all features except blue wins???
+    for x,y in trainloader:                    # for every iterations of x y in our new data class
+        yhat = model(x)                        # predict a y value from all features except blue wins???
         loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for those points vs our predictor
         optimizer.zero_grad()                  # resets the gradient
         loss.backward()                        # creates a set of derivatives from the loss equation and solves 
@@ -168,8 +173,7 @@ type(train_loader_iter)
 for i in enumerate(train_loader_iter):
       print(i)
 
-# will have the followin attributes
-trainloader._get_iterator
+# trainloader as a DataLoader object will have the following attributes
 
 ['_DataLoader__initialized','__annotations__','__class__','__class_getitem__',
  '__delattr__','__dict__','__dir__','__doc__','__eq__','__format__','__ge__',
@@ -181,9 +185,14 @@ trainloader._get_iterator
 'check_worker_number_rationality','multiprocessing_context']
 
 
+# KEY THINGS TO CONSIDER
 
-
-
+# making the Data an object allows you to define which columns are x and which are y
+# the the model needs to know how many features to expect
+# the df converted to a tensor as x features shold reflect this 
+# the Sigmoid function on the linear model is what makes it logisitic
+# the Dataloader needs certain attributes to work...consider this when making objects
+# dir() allows you to examine attributes
 
 
 
