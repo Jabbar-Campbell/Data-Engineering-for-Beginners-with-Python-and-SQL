@@ -149,14 +149,17 @@ for i,learning_rate in enumerate(learning_rates):
             loss.backward()           # creates a set of derivatives 
             optimizer.step()          # solves each/all derivative  at that point which stores the best criterion
 
-    # for each epoch there are 60 models
+    # for each epoch there are as many models as there are samples. 
+    # each needs to produce a prediction or  y_hat from the data
+    # loss is calculated against the actual y data
+    # the least of which is the winner
     yhat2 = model(dataset.x)          # for every set of x the model gives 1 output as defined earlier!   
     loss = criterion(yhat,dataset.y)
     validation_error[i]= loss.item()
     models.append(model)
 
     # In each epoch the best model is compared to the validation data
-    # the model and its cost are appended to a list
+    # the model and its cost are appended to a list as well 
     yhat3 = model(valdata.x)         
     loss = criterion(yhat,valdata.y)
     validation_error[i]= loss.item()

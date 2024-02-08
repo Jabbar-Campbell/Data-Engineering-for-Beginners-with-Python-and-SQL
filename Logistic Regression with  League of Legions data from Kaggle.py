@@ -32,10 +32,6 @@ my_list = my_list1.remove('blueWins')               # list except the our y pred
 
 
 
-
-
-
-
 ############################################### Create a Logistic Regression Model Object#################################################
 
 import torch.nn as nn
@@ -45,12 +41,12 @@ class logistic_regression(nn.Module):                                # our class
         self.linear = nn.Linear(in_features = in_size , out_features =1 )   # new variable linear is a model based on Linear()
     
     def forward(self,x):
-        out = self.linear(x)                            # a new function that takes the linear model of x and puts it thru the Sigmoid function
-        return torch.sigmoid(out)
+        out = self.linear(x)                    # a new function that takes the linear model of x and puts it thru the Sigmoid function
+        return torch.sigmoid(out)               # the sigmoid makes it logistical and non binary
     
     def __call__(self,x):                       # I think by using __call__ you dont need to name the function
         out = self.linear(x)
-        return torch.sigmoid(out)
+        return torch.sigmoid(out)               # the sigmoid makes it logistical and non binary
 
 ##########################################################################################################################################
 
@@ -70,44 +66,43 @@ class data_set(Dataset):
         self.len = self.x.shape[0] 
 
     def __getitem__(self,index):
-        return self.x[index],self.y[index]
+        return self.x[index],self.y[index]                          # important attribute to have
 
-    def __len__(self):
+    def __len__(self):                                              # important attribute to have
         return self.len
-    
-   # def __getitem__(self, idx):
-    #    if torch.is_tensor(idx):
-     #       idx = idx.tolist()
-
-    
- 
-
 ##########################################################################################################################################
 
-dataset = data_set(df)
-# I can't get this into the train loader
-# DataLoader needs the dataset class to have certain attributes
-# in order to make a useful train loader object 
-trainloader = DataLoader(dataset=dataset, shuffle=False, batch_size=1)
+dataset = data_set(df)      # converts df to a tensor object
+dataset[0]                  # will look at first sample
+features , labels = dataset # unpack into 2 dimensions
+print(features,labels)      # print dimensions 
 
 
-
-
-
-
-# make validation and training data 9879/2 and then the rest is validation
-# it will split df but now it will be a tensor object
+  # DataLoader needs the dataset class to have certain attributes
+  # in order to make a useful train loader object :(   )
+# trainloader = DataLoader(dataset=dataset, shuffle=False, batch_size=1)
 
 # train_data, val_data = torch.utils.data.random_split(df,[4939,(9879-4939)], generator=torch.Generator().manual_seed(1))
+
+# train_loader = DataLoader(dataset=train_data, shuffle=True, batch_size=1) 
+# val_loader = DataLoader(dataset=val_data, shuffle=True, batch_size=1)      
+ 
+
+
+
+
+
+
+import torch.utils.data as data
+train_data_tensor, val_data_tensor = data.random_split(dataset,[4939,(9879-4939)],generator=torch.Generator().manual_seed(1))
+
 
 # now the df is an object of a custom built class with the data divided as x an y tensors
 # make training and validation data objects and feed into the DataLoader()
 
-#train_data  =  data_set(train_data)  # :(  
-#val_data  =  data_set(val_data)     # :( 
 
-# trainloader = DataLoader(dataset=train_data, shuffle=True, batch_size=1) :(
-# val_loader = DataLoader(dataset=val_data, shuffle=True, batch_size=1)    :(   
+train_loader = DataLoader(dataset=train_data_tensor, shuffle=True, batch_size=1) 
+val_loader = DataLoader(dataset=val_data_tensor, shuffle=True, batch_size=1)      
  
 
 
@@ -121,29 +116,51 @@ trainloader = DataLoader(dataset=dataset, shuffle=False, batch_size=1)
 criterion = nn.BCELoss()                                           # 3d data with 2 samples
 #trainloader = DataLoader(dataset = train_data ,batch_size=1)           # get training data
 model = logistic_regression(39)                                # Feed our model object based on data dimension!!!!
-optimizer = optim.SGD(model.parameters(),lr=0.01)                  # Stochastic gradient descent optimizer
+learning_rates = [.00001,.0001,.001,.01,.1,1]
+optimizer = optim.SGD(model.parameters(),lr= learning_rates)   # Stochastic gradient descent optimizer for each learning rate
 criterion = nn.BCELoss()
 checpoint_path = 'checkpoint_model.pt'              # sometimes we need to write out each epoch
 checkpoint = {'epoch':None,                         # assign each epoch here 
               'model_state_dict':None,
               'optimizer_state_dict':None,
               'Loss':None} 
+models = []
+loss_list = []
 
 
 
 
-for epoch in range(100):
-    for x,y in trainloader:                    # for every iterations of x y in our new data class
-        yhat = model(x)                        # predict a y value from all features except blue wins???
-        loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for those points vs our predictor
+for epoch in range(10):
+    for x,y in train_loader:                   # for every iterations of x y in our new data class
+        yhat = model(x)                        # predict a y value from all features/predictors
+        loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for that point vs our predictor
         optimizer.zero_grad()                  # resets the gradient
         loss.backward()                        # creates a set of derivatives from the loss equation and solves 
-        optimizer.step()                       # update the gradient descent optimizer
+        optimizer.step()                       # update the gradient descent optimizer with a model fro each learning rate
+    #I think this updates and returns a single model
+    # the as the optimizer goes thru each point it updates 
+    # the best fit for each optimizer returning a model for each learning rate
+    # For each epoch I think I'm getting back 5 models one for every Learning rate
     checkpoint['epoch']= epoch
     checkpoint['model_state_dict']= model.state_dict()
     checkpoint['optimizer_state_dict']= optimizer.state_dict()
     checkpoint['Loss']= loss
+    #print(epoch)
     torch.save(checkpoint,checpoint_path)
+
+
+     
+# ????  is the model considered optimized now 
+# ????  we shold be getting loss on Training and validation data
+# ????  but why for every epoch isnt it just the same set of models 
+# ????  also 
+# ????? by train data no longer has an .x and .y as in by my dataset class!
+# ????? but the format is as such    
+yhat2 = model(train_data_tensor.x)          
+loss = criterion(yhat2,train_data_tensor.y)
+#validation_error[i]= loss.item()
+models.append(model)
+loss_list.append(loss)
 ##########################################################################################################################################
 
 # at the end there should be a model for each step or sample 
@@ -156,33 +173,6 @@ for epoch in range(100):
 
 
 
-
-
-#prints the train data:)
-train_data.dataset 
-
-### "for every my_list,blueWins in train_loader" (x1,x2,x3.....x40,y) isn't working
-### Once I see it maybe I can figure out how to iterate thru it.
-trainloader.dataset 
-
-train_loader_iter = iter(trainloader)
-# I can see the object type
-type(train_loader_iter) 
-# creating an object with the proper attributes has allowed me
-# to iterate thru the trainloader output from DataLoader !!! :) 
-for i in enumerate(train_loader_iter):
-      print(i)
-
-# trainloader as a DataLoader object will have the following attributes
-
-['_DataLoader__initialized','__annotations__','__class__','__class_getitem__',
- '__delattr__','__dict__','__dir__','__doc__','__eq__','__format__','__ge__',
- '__getattribute__', '__getstate__','__gt__','__hash__','__init__',
- '__init_subclass__','__iter__','__le__','__len__','__lt__','__module__',
- '__ne__','__new__','__orig_bases__','__parameters__','__reduce__','__reduce_ex__',
- '__repr__','__setattr__','__sizeof__','__slots__','__str__','__subclasshook__',
- '__weakref__','_auto_collation','_get_iterator','_index_sampler','_is_protocol',
-'check_worker_number_rationality','multiprocessing_context']
 
 
 # KEY THINGS TO CONSIDER
@@ -205,20 +195,3 @@ for i in enumerate(train_loader_iter):
 
 
 
-
-
-# lets make it a DATA OBJECT for fun
-
-class my_data():
-    def __init__(self,path_to_csv):
-        self.path_to_csv = path_to_csv
-        self.df = pd.read_csv(self.path_to_csv)
-
-    def print(self):
-        print(self.df)
- 
-    def colnames(self):
-        print(self.df.columns)
-
-    def wins(self):
-        return self.df['blueWins']
