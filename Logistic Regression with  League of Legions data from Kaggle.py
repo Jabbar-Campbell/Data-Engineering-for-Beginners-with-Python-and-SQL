@@ -74,8 +74,6 @@ class data_set(Dataset):
 
 dataset = data_set(df)      # converts df to a tensor object
 dataset[0]                  # will look at first sample
-features , labels = dataset # unpack into 2 dimensions
-print(features,labels)      # print dimensions 
 
 
   # DataLoader needs the dataset class to have certain attributes
