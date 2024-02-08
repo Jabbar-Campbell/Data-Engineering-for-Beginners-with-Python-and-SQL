@@ -114,8 +114,8 @@ val_loader = DataLoader(dataset=val_data_tensor, shuffle=True, batch_size=1)
 criterion = nn.BCELoss()                                           # 3d data with 2 samples
 #trainloader = DataLoader(dataset = train_data ,batch_size=1)           # get training data
 model = logistic_regression(39)                                # Feed our model object based on data dimension!!!!
-learning_rates = [.00001,.0001,.001,.01,.1,1]
-optimizer = optim.SGD(model.parameters(),lr= learning_rates)   # Stochastic gradient descent optimizer for each learning rate
+#learning_rates = [.00001,.0001,.001,.01,.1,1]
+optimizer = optim.SGD(model.parameters(),lr= .01)   # Stochastic gradient descent optimizer for each learning rate
 criterion = nn.BCELoss()
 checpoint_path = 'checkpoint_model.pt'              # sometimes we need to write out each epoch
 checkpoint = {'epoch':None,                         # assign each epoch here 
@@ -134,7 +134,7 @@ for epoch in range(10):
         loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for that point vs our predictor
         optimizer.zero_grad()                  # resets the gradient
         loss.backward()                        # creates a set of derivatives from the loss equation and solves 
-        optimizer.step()                       # update the gradient descent optimizer with a model fro each learning rate
+        optimizer.step()                       # update the gradient descent optimizer with a model for each learning rate
     #I think this updates and returns a single model
     # the as the optimizer goes thru each point it updates 
     # the best fit for each optimizer returning a model for each learning rate
@@ -151,11 +151,9 @@ for epoch in range(10):
 # ????  is the model considered optimized now 
 # ????  we shold be getting loss on Training and validation data
 # ????  but why for every epoch isnt it just the same set of models 
-# ????  also 
-# ????? by train data no longer has an .x and .y as in by my dataset class!
-# ????? but the format is as such    
-yhat2 = model(train_data_tensor.x)          
-loss = criterion(yhat2,train_data_tensor.y)
+   
+yhat2 = model(train_data_tensor.dataset.x)          
+loss = criterion(yhat2,train_data_tensor.dataset.y)
 #validation_error[i]= loss.item()
 models.append(model)
 loss_list.append(loss)
