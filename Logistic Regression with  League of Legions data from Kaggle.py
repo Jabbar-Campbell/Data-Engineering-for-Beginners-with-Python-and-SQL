@@ -78,7 +78,7 @@ dataset[0]                  # will look at first sample
 
 # DataLoader needs the dataset class to have certain attributes
 # in order to make a useful train loader object :(   )
-# trainloader = DataLoader(dataset=dataset, shuffle=False, batch_size=1)
+trainloader = DataLoader(dataset=dataset, shuffle=True, batch_size=1)
    # dataiter = iter(trainloader)
    # data = dataiter.next()
    # features , labels = data
@@ -102,8 +102,8 @@ train_data_tensor, val_data_tensor = data.random_split(dataset,[4939,(9879-4939)
 # make training and validation data objects and feed into the DataLoader()
 
 
-train_loader = DataLoader(dataset=train_data_tensor, shuffle=True, batch_size=1) 
-val_loader = DataLoader(dataset=val_data_tensor, shuffle=True, batch_size=1)      
+train_loader = DataLoader(dataset=train_data_tensor, shuffle=True, batch_size=10) 
+val_loader = DataLoader(dataset=val_data_tensor, shuffle=True, batch_size=10)      
  
 
 
@@ -113,12 +113,19 @@ val_loader = DataLoader(dataset=val_data_tensor, shuffle=True, batch_size=1)
 
 
 ###########################################################TRAIN THE MODEL with Gradient Descent ############################################
+# The code provided creates a single model instance, and this model is updated iteratively within each epoch using batches of data. 
+#                                              there is only one model throughout the training process.
+# Multiple epochs are used in training to allow the model to see the entire dataset multiple times. While the model instance remains 
+# the same throughout the epochs, the parameters (weights and biases) of the model are updated during each epoch based on the entire 
+#                                             dataset or batches of it. Here's why multiple epochs are necessary:
+
+
 
 criterion = nn.BCELoss()                                           # 3d data with 2 samples
 # trainloader = DataLoader(dataset = train_data ,batch_size=1)           # get training data
 model = logistic_regression(39)                                # Feed our model object based on data dimension!!!!
-#learning_rates = [.00001,.0001,.001,.01,.1,1]
-optimizer = optim.SGD(model.parameters(),lr= .01)   # Stochastic gradient descent optimizer for each learning rate
+learning_rates = [.00001,.0001,.001,.01,.1,1]
+#optimizer = optim.SGD(model.parameters(),lr= .1)   # Stochastic gradient descent optimizer for each learning rate
 criterion = nn.BCELoss()
 checkpoint_path = 'checkpoint_model.pt'              # sometimes we need to write out each epoch
 checkpoint = {'epoch':None,                         # assign each epoch here 
@@ -126,55 +133,73 @@ checkpoint = {'epoch':None,                         # assign each epoch here
               'optimizer_state_dict':None,
               'Loss':None} 
 models = []
-loss_list = []
+train_loss_list1 = []
+val_loss_list2 = []
 
+train_loss_avg = []
+val_loss_avg = []
 
 num_epochs = 10
 
-for epoch in range(num_epochs):
-    #I think this updates and returns a single model
-    # the as the optimizer goes thru each point it updates 
-    # the best fit for each optimizer returning a model for each learning rate
-    for x,y in train_loader:                   # for every iterations of x y in our new data class
-        yhat = model(x)                        # predict a y value from all features/predictors
-        loss = criterion(yhat,y)               # calculate a CROSS ENTROPY LOSS for that point vs our predictor
-        optimizer.zero_grad()                  # resets the gradient
-        loss.backward()                        # creates a set of derivatives from the loss equation and solves 
-        optimizer.step()                       # update the gradient descent optimizer with a model for each learning rate
+
+for lr in learning_rates:
+    model = logistic_regression(39)  # Initialize model for each learning rate
+    optimizer = optim.SGD(model.parameters(), lr=lr)  # Initialize optimizer with current learning rate
+    
+    train_loss_list1 = []  # Reset lists for each learning rate
+    val_loss_list2 = []
+
+
+    for epoch in range(num_epochs):
+    # This updates and returns a single model 
+    # the optimizer goes thru each point as it updates 
+    # and adjust the weights and parameters further on each epoch
+    # returning a single model for a given learning rate
+        for step, (x, y) in enumerate(train_loader): # for every iterations of x y in our new data class we use enumerate to reference each step later on
+            yhat = model(x)                          # predict a y value from all features/predictors
+            loss = criterion(yhat,y)                 # calculate a CROSS ENTROPY LOSS for that point vs our predictor
+            optimizer.zero_grad()                    # resets the gradient
+            loss.backward()                          # creates a set of derivatives from the loss equation and solves 
+            optimizer.step()                         # update the gradient descent optimizer with a model for each learning rate
     
         #if (item +1 ) % 5 == 0:
-        print(train_loader._iterator)
-        print(f""" epoch {epoch + 1}/{num_epochs},  
-        loss {loss}, 
-        yhat {yhat}, optimizer step {optimizer}""") # i wish i could print out the iteration or step
-    
-          
+        #print(train_loader._iterator)
+        #print(f""" epoch {epoch + 1}/{num_epochs},  
+        #loss {loss}, 
+        #yhat {yhat}, optimizer step {optimizer}""") # i wish i could print out the iteration or step       
         #print(loss)
-        # who can i see the model number each time????????
+        # how can i see the model number each time????????
     
-    # For each epoch I think I'm getting back 5 models one for every Learning rate
-    checkpoint['epoch']= epoch
-    checkpoint['model_state_dict']= model.state_dict()
-    checkpoint['optimizer_state_dict']= optimizer.state_dict()
-    checkpoint['Loss']= loss
-    #print(checkpoint)
-    torch.save(checkpoint,checkpoint_path)
+        # For each epoch I think I'm getting back a model one for every Learning rate
+            checkpoint['epoch']= epoch
+            checkpoint['model_state_dict']= model.state_dict()
+            checkpoint['optimizer_state_dict']= optimizer.state_dict()
+            checkpoint['Loss']= loss
+            #print(checkpoint)
+            torch.save(checkpoint,checkpoint_path)
 
 
-     
-# ????  is the model considered optimized now 
-# ????  we shold be getting loss on Training and validation data
-# ????  but why for every epoch isnt it just the same models 
-# ????  why is my model always one?????????
-yhat2 = model(train_data_tensor.dataset.x)          
-loss = criterion(yhat2,train_data_tensor.dataset.y)
-print(f""" yhat2 is {yhat2} loss is {loss} """)
+            yhat2_train = model(train_data_tensor.dataset.x)          
+            loss_train = criterion(yhat2_train,train_data_tensor.dataset.y)
+            train_loss_list1.append(loss_train)
+            if step == len(train_loader)-1:
+                train_loss_avg.append(sum(train_loss_list1)/len(train_loss_list1))   
+            #print(f""" Training data {yhat2_train} loss : {loss_train} """)
 
-# ??? I think the model is only 50 percent accurate on the training data
+            yhat2_val = model(val_data_tensor.dataset.x)          
+            loss_val = criterion(yhat2_val,val_data_tensor.dataset.y)
+            val_loss_list2.append(loss_val)
+            if step == len(train_loader)-1:
+                val_loss_avg.append(sum(val_loss_list2)/len(val_loss_list2))
 
-#validation_error[i]= loss.item()
-models.append(model)
-loss_list.append(loss)
+            print(f""" at step {step} the training loss is {loss_train} the validation loss is {loss_val}""") 
+            #print(f""" Validation data {yhat2_val} loss : {loss_val} """)
+
+    print(f""" The Avg Validation loss for learning rate {lr}is  {val_loss_avg} """)
+    print(f""" The Avg Training loss for learning rate {lr} is {train_loss_avg} """)
+# maybe we can improve with increasing epoch changing learning rate or providing  more training data ?
+# :):)learning rate seem to have an affect :) :) closer to 1 reduces the loss
+
 ##########################################################################################################################################
 
 # at the end there should be a model for each step or sample 
@@ -206,6 +231,37 @@ loss_list.append(loss)
 
 
 
+#In this example:
 
+#train function computes the loss for each batch and appends it to epoch_loss.
+#After each epoch, the average loss is calculated and stored in loss_vals.
+#The my_plot function creates a plot showing the training loss over epochs.
 
+def my_plot(epochs, loss):
+    plt.plot(epochs, loss)
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training Loss per Epoch')
+    plt.show()
 
+def train(num_epochs, optimizer, criterion, model):
+    loss_vals = []  # To store average loss per epoch
+
+    for epoch in range(num_epochs):
+        epoch_loss = []  # To store loss for each batch
+
+        for i, (images, labels) in enumerate(trainloader):
+            # Rest of your training code
+            # ...
+
+            loss.backward()
+            epoch_loss.append(loss.item())
+
+            # Rest of your training code
+            # ...
+
+        # Calculate average loss for the epoch
+        loss_vals.append(sum(epoch_loss) / len(epoch_loss))
+
+    # Plot the loss
+    my_plot(np.linspace(1, num_epochs, num_epochs).astype(int), loss_vals)
