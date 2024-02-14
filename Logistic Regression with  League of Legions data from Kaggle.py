@@ -63,7 +63,7 @@ class data_set(Dataset):
     def __init__(self,df):
         super(data_set, self).__init__()                                      
         self.x = torch.Tensor(df.iloc[:, np.r_[0, 2:40]].to_numpy()) # matrix 1  should match model input
-        self.y = torch.Tensor(df.iloc[:,[1]] .to_numpy())             # matix 2 
+        self.y = torch.Tensor(df.iloc[:,[1]] .to_numpy())  # required true is necessary for gradients calculation            # matix 2 
         self.len = self.x.shape[0] 
 
     def __getitem__(self,index):
@@ -103,8 +103,8 @@ train_data_tensor, val_data_tensor = data.random_split(dataset,[4939,(9879-4939)
 # make training and validation data objects and feed into the DataLoader()
 
 
-train_loader = DataLoader(dataset=train_data_tensor, shuffle=True, batch_size=10) 
-val_loader = DataLoader(dataset=val_data_tensor, shuffle=True, batch_size=10)      
+train_loader = DataLoader(dataset=train_data_tensor, shuffle=True, batch_size=5) 
+val_loader = DataLoader(dataset=val_data_tensor, shuffle=True, batch_size=5)      
  
 
 
@@ -153,25 +153,18 @@ for lr in learning_rates:
 
     for epoch in range(num_epochs):
     # This updates and returns a single model 
-    # the optimizer goes thru each point as it updates 
-    # and adjust the weights and parameters further on each epoch
-    # returning a single model for a given learning rate
-        for step, (x, y) in enumerate(train_loader): # for every iterations of x y in our new data class we use enumerate to reference each step later on
+    # This goes thru each point as it updates and optimizes weights and parameters
+    # returning a single model for each epoch of  a given learning rate
+    # step are the batch sizes or number of times to cover the data 
+    # we use step and enumerate in order to use if logic and print
+        for step, (x, y) in enumerate(train_loader): # for every batch iterations of x y in our new data 
             yhat = model(x)                          # predict a y value from all features/predictors
             loss = criterion(yhat,y)                 # calculate a CROSS ENTROPY LOSS for that point vs our predictor
             optimizer.zero_grad()                    # resets the gradient
             loss.backward()                          # creates a set of derivatives from the loss equation and solves 
             optimizer.step()                         # update the gradient descent optimizer with a model for each learning rate
-    
-        #if (item +1 ) % 5 == 0:
-        #print(train_loader._iterator)
-        #print(f""" epoch {epoch + 1}/{num_epochs},  
-        #loss {loss}, 
-        #yhat {yhat}, optimizer step {optimizer}""") # i wish i could print out the iteration or step       
-        #print(loss)
-        # how can i see the model number each time????????
-    
-        # For each epoch I think I'm getting back a model one for every Learning rate
+             
+            # checkpoints help us track progress
             checkpoint['epoch']= epoch
             checkpoint['model_state_dict']= model.state_dict()
             checkpoint['optimizer_state_dict']= optimizer.state_dict()
@@ -179,13 +172,15 @@ for lr in learning_rates:
             #print(checkpoint)
             torch.save(checkpoint,checkpoint_path)
 
-
+            # the model us used on  validation and training data 
+            # we make a list for every epoch
+            # and then calculate and average            
             yhat2_train = model(train_data_tensor.dataset.x)          
             loss_train = criterion(yhat2_train,train_data_tensor.dataset.y)
             train_loss_list1.append(loss_train)
             if step == len(train_loader)-1:
                 train_loss_avg.append(sum(train_loss_list1)/len(train_loss_list1))   
-            #print(f""" Training data {yhat2_train} loss : {loss_train} """)
+             
 
             yhat2_val = model(val_data_tensor.dataset.x)          
             loss_val = criterion(yhat2_val,val_data_tensor.dataset.y)
@@ -193,20 +188,39 @@ for lr in learning_rates:
             if step == len(train_loader)-1:
                 val_loss_avg.append(sum(val_loss_list2)/len(val_loss_list2))
 
-            print(f""" at step {step} the training loss is {loss_train} the validation loss is {loss_val}""") 
-            #print(f""" Validation data {yhat2_val} loss : {loss_val} """)
+            #print(f""" at step {step} the training loss is {loss_train} the validation loss is {loss_val}""") 
+             
 
     print(f""" The Avg Validation loss for learning rate {lr}is  {val_loss_avg} """)
     print(f""" The Avg Training loss for learning rate {lr} is {train_loss_avg} """)
-# maybe we can improve with increasing epoch changing learning rate or providing  more training data ?
-# :):)learning rate seem to have an affect :) :) closer to 1 reduces the loss
+
+
+
+
+
+
+
+
+
 
 ##########################################################################################################################################
 
-# at the end there should be a model for each step or sample 
-# each must be compared to validation data to see which has the lowest
-# CROSS ENTROPY LOSS (basically the loss for classification)
-# to increase the speed consider chagning the batch size in the Data loader
+y = [tensor.item() for tensor in val_loss_avg]
+y1 =[tensor.item() for tensor in train_loss_avg]
+
+numbers = list(range(0, 4))
+repeated_numbers = numbers * 6
+x1 = (list(range(1, 11))) * 6
+x2 = ["lr1"  * 6, "lr2"* 6, "lr3"* 6,"lr4"* 6 ,"lr5"* 6,"lr6"* 6]
+
+from matplotlib import pyplot as plt
+plt.plot(list(range(0, 60)), y)
+#plt.plot(list(range(0, 60)), y1)
+plt.xlabel('every ten epochs is a new learning rate')
+plt.ylabel('Loss')
+plt.title('Training Loss for learning rates .00001,.0001,.001,.01,.1, and 1')
+plt.show()
+
 
 
 
@@ -216,53 +230,15 @@ for lr in learning_rates:
 
 
 # KEY THINGS TO CONSIDER
+# CROSS ENTROPY LOSS (basically the loss for classification)
+
+# to increase the speed consider chagning the batch size in the Data loader
 
 # making the Data an object allows you to define which columns are x and which are y
 # the the model needs to know how many features to expect
 # the df converted to a tensor as x features shold reflect this 
 # the Sigmoid function on the linear model is what makes it logisitic
 # the Dataloader needs certain attributes to work...consider this when making objects
+# steps of training is controlled by the DataLoader() num of workers argument
+# performance is affected by learning rates of training and batch sizes and num of workers
 # dir() allows you to examine attributes
-
-
-
-
-
-
-
-
-
-#In this example:
-
-#train function computes the loss for each batch and appends it to epoch_loss.
-#After each epoch, the average loss is calculated and stored in loss_vals.
-#The my_plot function creates a plot showing the training loss over epochs.
-
-def my_plot(epochs, loss):
-    plt.plot(epochs, loss)
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    plt.title('Training Loss per Epoch')
-    plt.show()
-
-def train(num_epochs, optimizer, criterion, model):
-    loss_vals = []  # To store average loss per epoch
-
-    for epoch in range(num_epochs):
-        epoch_loss = []  # To store loss for each batch
-
-        for i, (images, labels) in enumerate(trainloader):
-            # Rest of your training code
-            # ...
-
-            loss.backward()
-            epoch_loss.append(loss.item())
-
-            # Rest of your training code
-            # ...
-
-        # Calculate average loss for the epoch
-        loss_vals.append(sum(epoch_loss) / len(epoch_loss))
-
-    # Plot the loss
-    my_plot(np.linspace(1, num_epochs, num_epochs).astype(int), loss_vals)
