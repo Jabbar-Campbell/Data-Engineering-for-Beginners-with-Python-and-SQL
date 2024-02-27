@@ -230,6 +230,8 @@ plt.show()
 
 
 # KEY THINGS TO CONSIDER
+# STOCHASTIC GRADIENT DESCENT considers every data point and is time consoming 
+# BATCH GRADIENT DESCENT works according to the batch size andis more effecient
 # CROSS ENTROPY LOSS (basically the loss for classification)
 
 # to increase the speed consider chagning the batch size in the Data loader
@@ -242,3 +244,6 @@ plt.show()
 # steps of training is controlled by the DataLoader() num of workers argument
 # performance is affected by learning rates of training and batch sizes and num of workers
 # dir() allows you to examine attributes
+#                                                SEE ALSO 
+#                                              FOR IMPORTANT STEPS IE NORMALIZTION FEATURE SELECTION     
+# https://github.com/EdanMizrahi/League_of_Legends_Logistic_Regression/blob/master/Logistic_Regression_Read_Me.ipynb
